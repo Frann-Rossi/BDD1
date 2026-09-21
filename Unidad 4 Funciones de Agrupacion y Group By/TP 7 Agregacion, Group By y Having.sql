@@ -82,10 +82,27 @@ join
 group by
 	c.id_cliente,c.nombre
 order by
-	suma_pedidos desc
+	suma_pedidos desc;
 -- *******************************************************
 
 
 -- *******************************************************
 -- EJERCICIO 7
+select
+	c.id_cliente,
+    c.nombre,
+	count(*) as cantidad_total_pedidos,
+    coalesce(sum(p.total), 0) as suma_pedidos,
+    coalesce(avg(p.total), 0) as promedio_pedidos
+from
+	pedidos as p
+left join
+	clientes as c
+	on p.id_cliente = c.id_cliente
+group by
+	c.id_cliente,c.nombre
+order by
+	suma_pedidos desc;
+
+
 -- *******************************************************

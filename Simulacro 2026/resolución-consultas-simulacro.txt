@@ -1,0 +1,180 @@
+1) Mostrar el nombre del artista y el año de su último álbum para todos los artistas argentinos. Ordenar por año descendiente.
+
+SELECT
+	ar.nombre,
+	MAX(al.año) AS año_ultimo_album
+FROM
+	artistas AS ar JOIN
+    	albums AS al ON ar.id_artista = al.id_artista
+WHERE
+	ar.nacionalidad = 'argentina'
+GROUP BY
+	ar.nombre
+ORDER BY
+	año_ultimo_album DESC;
+
+2) Obtener el nombre del artista, los álbumes y su duración total para toda la discografía que supere los 30 minutos de duración.
+
+SELECT
+	ar.nombre,
+    	SUM(c.duracion) AS duracion_total
+FROM
+	artistas AS ar JOIN
+    	albums AS al ON ar.id_artista = al.id_artista JOIN
+    	canciones AS c ON c.id_album = al.id_album
+GROUP BY
+	ar.nombre
+HAVING
+	duracion_total > 30;
+
+3) Mostrar los nombres de las playlists de usuarios premium inscriptos antes del 2013.
+
+SELECT
+	p.nombre,
+    	u.nombre,
+    	u.fecha_inscripcion
+FROM
+	usuarios as u JOIN
+    	playlists AS p ON u.id_usuario = p.id_usuario
+WHERE
+	u.plan = 'premium'
+	AND
+	YEAR(u.fecha_inscripcion) < 2013;
+
+4) Listar los nombres de los usuarios, su estado y sus playlists asociadas.
+- Si el campo estado es true, mostrar "activo". De lo contrario, se mostrará "inactivo".
+- Si un usuario no tiene ninguna playlist asociada, mostrar "sin playlists".
+
+SELECT
+	COALESCE(p.nombre, "Sin playlists"),
+    	u.nombre,
+    	CASE
+		WHEN u.estado = true THEN "activo"
+        	ELSE "inactivo"
+    	END AS estado
+FROM
+	playlists AS p RIGHT JOIN
+    	usuarios AS u ON p.id_usuario = u.id_usuario;
+
+5) Obtener los artistas con las 3 canciones más largas y las 3 canciones más cortas. Incluir la duración de cada canción.
+
+(SELECT
+	ar.nombre,
+    	c.nombre,
+    	c.duracion
+FROM
+	artistas AS ar JOIN
+    	albums AS al ON ar.id_artista = al.id_artista JOIN
+    	canciones AS c ON al.id_album = c.id_album
+ORDER BY
+	c.duracion
+LIMIT 3)
+UNION
+(SELECT
+	ar.nombre,
+    	c.nombre,
+    	c.duracion
+FROM
+	artistas AS ar JOIN
+    	albums AS al ON ar.id_artista = al.id_artista JOIN
+    	canciones AS c ON al.id_album = c.id_album
+ORDER BY
+	c.duracion DESC
+LIMIT 3);
+
+6) Mostrar la cantidad de playlists que tiene cada usuario activo, incluyendo usuarios sin playlists. Ordenar por cantidad de playlists desc.
+
+SELECT
+	u.nombre,
+    	COUNT(p.id_playlist) AS cantidad_playlists
+FROM
+	usuarios AS u LEFT JOIN
+    	playlists AS p ON u.id_usuario = p.id_usuario
+WHERE
+	u.estado = true
+GROUP BY
+	u.nombre
+ORDER BY
+	cantidad_playlists DESC;
+
+7) Listar los artistas y el promedio de duración de sus canciones que contengan "rock" en su género. Ordenar alfabéticamente por nombre de artista.
+
+SELECT
+	ar.nombre,
+    	AVG(c.duracion) AS duracion_promedio
+FROM
+	artistas AS ar JOIN
+    	albums AS al ON ar.id_artista = al.id_artista JOIN
+    	canciones AS c ON c.id_album = al.id_album
+WHERE
+	c.genero LIKE '%rock%'
+GROUP BY
+	ar.nombre
+ORDER BY
+	ar.nombre;
+
+8) Obtener las playlists, la cantidad de canciones y sus usuarios asociados. Incluir playlists sin canciones. Ordenar de mayor a menor cantidad de canciones.
+
+SELECT
+	p.nombre,
+    	u.nombre,
+    	COUNT(cxp.id_playlist) AS cant_canciones
+FROM
+	usuarios AS u JOIN
+    	playlists AS p ON u.id_usuario = p.id_usuario LEFT JOIN
+    	canciones_x_playlist AS cxp ON cxp.id_playlist = p.id_playlist
+GROUP BY
+	p.nombre,
+    	u.nombre
+ORDER BY
+	cant_canciones DESC;
+
+
+9) Listar los nombres de canciones de artistas argentinos o brasileros.
+
+SELECT
+	c.nombre,
+	a.nombre,
+	a.nacionalidad
+FROM
+	artistas AS a JOIN
+	albums AS al ON a.id_artista = al.id_artista JOIN
+	canciones AS c ON c.id_album = al.id_album
+WHERE
+	a.nacionalidad IN ("argentina", "brasil");
+
+10) Mostrar las canciones que no están asociadas a ninguna playlist.
+
+SELECT
+	c.nombre
+FROM
+	canciones AS c LEFT JOIN
+	canciones_x_playlist AS cxp ON c.id_cancion = cxp.id_cancion
+WHERE
+	cxp.id_cancion IS NULL;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
