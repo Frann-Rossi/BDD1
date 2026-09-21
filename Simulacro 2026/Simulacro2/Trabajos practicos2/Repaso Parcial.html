@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Repaso razonado para el parcial de Base de Datos I: situaciones de análisis, diseño, integridad, consultas, JOIN y agregación.">
+<title>Repaso razonado para el parcial · Base de Datos I</title>
+<style>
+:root{
+  --bg:#f5f7fb;--surface:#fff;--surface2:#eef3f8;--text:#172033;--muted:#5d687b;
+  --line:#dbe3ee;--primary:#174f78;--primary2:#0f6b69;--accent:#d97706;
+  --good:#13795b;--danger:#a63446;--code:#132236;--codeText:#eaf2ff;
+  --shadow:0 14px 34px rgba(35,55,80,.09);--radius:18px;--sidebar:300px;--max:1120px
+}
+html[data-theme="dark"]{
+  --bg:#0d1420;--surface:#151f2e;--surface2:#1c293b;--text:#edf4ff;--muted:#aebbd0;
+  --line:#314158;--primary:#72b7e4;--primary2:#63c7c0;--accent:#f1b45b;
+  --good:#71d6ae;--danger:#ff99aa;--code:#09111d;--codeText:#eaf2ff;
+  --shadow:0 16px 38px rgba(0,0,0,.26)
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:80px}
+body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);line-height:1.65}
+code,pre{font-family:"Cascadia Code","SFMono-Regular",Consolas,monospace}
+.institutional-header{background:#fff;color:#15191f;border-bottom:1px solid #d8dde5}
+.institutional-inner{width:min(1500px,calc(100% - 36px));min-height:88px;margin:auto;display:grid;grid-template-columns:auto 1fr auto;gap:28px;align-items:center;padding:12px 0}
+.brand-utn{font-size:1.55rem;font-weight:900;letter-spacing:-.04em}
+.institutional-course small{display:block;color:#5d6673;font-weight:800;letter-spacing:.09em;text-transform:uppercase;font-size:.68rem}
+.institutional-course strong{display:block;font-size:1.15rem}.institutional-course span{font-size:.82rem;color:#5d6673}
+.institutional-meta{text-align:right;font-size:.72rem;line-height:1.35}
+.topbar{position:sticky;top:0;z-index:50;min-height:64px;padding:0 22px;display:flex;align-items:center;justify-content:space-between;background:color-mix(in srgb,var(--surface) 93%,transparent);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.brand{display:flex;gap:12px;align-items:center}.brand-mark{display:grid;place-items:center;width:42px;height:42px;border-radius:13px;color:#fff;background:linear-gradient(145deg,#174f78,#0f6b69);font-weight:900}
+.brand-text strong,.brand-text span{display:block}.brand-text span{font-size:.78rem;color:var(--muted)}
+.icon-btn{border:1px solid var(--line);background:var(--surface);color:var(--text);border-radius:11px;width:40px;height:40px;cursor:pointer}
+.layout{display:grid;grid-template-columns:var(--sidebar) minmax(0,1fr);min-height:calc(100vh - 150px)}
+.sidebar{position:sticky;top:64px;align-self:start;height:calc(100vh - 64px);overflow:auto;padding:28px 22px;border-right:1px solid var(--line);background:var(--surface)}
+.sidebar h2{font-size:.87rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 14px}
+.nav-list{list-style:none;margin:0;padding:0;display:grid;gap:7px}.nav-list a{display:flex;gap:10px;text-decoration:none;color:var(--text);padding:9px 10px;border-radius:10px;font-size:.9rem}.nav-list a:hover{background:var(--surface2)}.nav-list span:first-child{color:var(--primary);font-weight:800}
+.side-note{margin-top:22px;padding:14px;border-radius:14px;background:var(--surface2);font-size:.84rem;color:var(--muted)}
+main{min-width:0}.content{width:min(var(--max),calc(100% - 40px));margin:0 auto;padding:34px 0 70px}
+.hero{padding:34px;border-radius:24px;background:linear-gradient(135deg,color-mix(in srgb,var(--primary) 11%,var(--surface)),var(--surface));border:1px solid var(--line);box-shadow:var(--shadow)}
+.eyebrow{font-size:.78rem;text-transform:uppercase;letter-spacing:.12em;color:var(--primary);font-weight:900}
+.hero h1{font-size:clamp(2rem,4vw,3.3rem);line-height:1.04;letter-spacing:-.04em;margin:.45rem 0 .8rem}
+.hero p{font-size:1.05rem;color:var(--muted);max-width:860px}.hero-meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}
+.hero-meta span,.tag{font-size:.75rem;font-weight:800;padding:6px 9px;border-radius:999px;background:var(--surface2);border:1px solid var(--line)}
+.intro-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:18px 0}.mini{padding:17px;border-radius:16px;border:1px solid var(--line);background:var(--surface)}.mini strong{display:block;margin-bottom:5px}.mini p{margin:0;color:var(--muted);font-size:.9rem}
+.section-card{margin-top:26px;padding:26px;border:1px solid var(--line);border-radius:22px;background:var(--surface);box-shadow:var(--shadow)}
+.section-kicker{font-size:.73rem;font-weight:900;text-transform:uppercase;letter-spacing:.1em;color:var(--primary)}
+.section-card h2{margin:.35rem 0 .4rem;font-size:1.55rem;letter-spacing:-.025em}.section-lead{margin:0 0 18px;color:var(--muted)}
+.challenge{margin:14px 0;border:1px solid var(--line);border-radius:16px;background:var(--surface);overflow:hidden}
+.challenge summary{cursor:pointer;list-style:none;padding:17px 52px 17px 18px;position:relative;font-weight:750}
+.challenge summary::-webkit-details-marker{display:none}
+.challenge summary::after{content:'+';position:absolute;right:18px;top:50%;transform:translateY(-50%);display:grid;place-items:center;width:28px;height:28px;border-radius:9px;background:var(--surface2);color:var(--primary);font-size:1.25rem;font-weight:900}
+.challenge[open] summary::after{content:'−'}.challenge[open] summary{border-bottom:1px solid var(--line)}
+.answer{padding:18px;background:color-mix(in srgb,var(--surface2) 62%,var(--surface))}
+.answer p:first-child{margin-top:0}.answer p:last-child{margin-bottom:0}
+.challenge-title{display:block;margin-top:7px;font-weight:780}
+.tag-row{display:flex;gap:6px;flex-wrap:wrap}.tag{font-size:.68rem;color:var(--muted)}
+.tag.design{color:var(--primary)}.tag.sql{color:var(--primary2)}.tag.integrity{color:var(--danger)}.tag.normal{color:var(--accent)}.tag.join{color:var(--primary2)}.tag.group{color:var(--good)}
+.code-wrap{margin:12px 0;border-radius:14px;background:var(--code);overflow:auto}.code-wrap pre{margin:0;padding:16px;color:var(--codeText);font-size:.88rem;line-height:1.55}
+.data-table{width:100%;border-collapse:collapse;margin:12px 0;font-size:.9rem}.data-table th,.data-table td{padding:9px 10px;border:1px solid var(--line);text-align:left}.data-table th{background:var(--surface2)}
+.schema{display:grid;gap:10px;margin:12px 0}.schema-row{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center}.schema-box{padding:12px;border-radius:12px;border:1px solid var(--line);background:var(--surface2)}.schema-link{font-weight:900;color:var(--primary)}
+.callout{margin:14px 0;padding:13px 15px;border-left:4px solid var(--primary);border-radius:10px;background:var(--surface2)}.callout.good{border-left-color:var(--good)}.callout.warn{border-left-color:var(--accent)}
+.footer-note{margin-top:28px;padding:18px;border-radius:16px;background:var(--surface2);color:var(--muted);font-size:.9rem}
+@media(max-width:900px){.layout{grid-template-columns:1fr}.sidebar{display:none}.institutional-inner{grid-template-columns:1fr;gap:5px}.institutional-meta{display:none}.content{width:min(100% - 24px,var(--max))}.intro-grid{grid-template-columns:1fr}.topbar{padding:0 12px}.schema-row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header class="institutional-header"><div class="institutional-inner"><div class="brand-utn">UTN</div><div class="institutional-course"><small>UTN · FR Mar del Plata · TUP</small><strong>Tecnicatura Universitaria en Programación</strong><span>Base de Datos I · Material de repaso</span></div><div class="institutional-meta"><strong>Universidad Tecnológica Nacional</strong><div>Facultad Regional Mar del Plata</div><div>2026</div></div></div></header>
+<header class="topbar"><div class="brand"><div class="brand-mark">BD</div><div class="brand-text"><strong>Base de Datos I</strong><span>Repaso razonado para el parcial</span></div></div><button class="icon-btn" id="themeButton" title="Cambiar tema" aria-label="Cambiar tema">◐</button></header>
+
+<div class="layout">
+<aside class="sidebar">
+<h2>Recorrido</h2>
+<ul class="nav-list">
+<li><a href="#inicio"><span>00</span><span>Cómo usar este repaso</span></a></li>
+<li><a href="#modelo"><span>01</span><span>Modelado y tablas</span></a></li>
+<li><a href="#normalizacion"><span>02</span><span>Normalización</span></a></li>
+<li><a href="#restricciones"><span>03</span><span>Restricciones e integridad</span></a></li>
+<li><a href="#consultas"><span>04</span><span>Consultas básicas</span></a></li>
+<li><a href="#joins"><span>05</span><span>JOINs</span></a></li>
+<li><a href="#agregacion"><span>06</span><span>Agregación</span></a></li>
+<li><a href="#integradores"><span>07</span><span>Casos integradores</span></a></li>
+</ul>
+<div class="side-note"><strong>Uso sugerido:</strong> leer la situación, discutir una respuesta y recién después abrir el <b>+</b>.</div>
+</aside>
+
+<main><div class="content">
+<section class="hero" id="inicio">
+<span class="eyebrow">Repaso previo al parcial</span>
+<h1>Aplicar, relacionar y justificar</h1>
+<p>Este material complementa el simulacro teórico. Las situaciones están pensadas para interpretar modelos, detectar problemas, anticipar resultados y justificar decisiones.</p>
+<div class="hero-meta"><span>Modelo relacional</span><span>Normalización</span><span>DDL y DML</span><span>SELECT</span><span>JOIN</span><span>GROUP BY</span></div>
+</section>
+
+<div class="intro-grid">
+<div class="mini"><strong>Intentar primero</strong><p>Responder antes de abrir la solución.</p></div>
+<div class="mini"><strong>Explicar el porqué</strong><p>No alcanza con decir que algo “está mal”.</p></div>
+<div class="mini"><strong>Conectar conceptos</strong><p>Varias situaciones mezclan diseño, restricciones y consultas.</p></div>
+</div>
+
+<section class="section-card" id="modelo">
+<span class="section-kicker">01 · Modelado y paso a tablas</span>
+<h2>Leer el problema antes de escribir SQL</h2>
+<p class="section-lead">Las consignas apuntan a interpretar reglas de negocio y decisiones de diseño.</p>
+
+<details class="challenge"><summary><div class="tag-row"><span class="tag design">Modelado</span></div><span class="challenge-title">1. En una veterinaria quieren guardar hasta tres teléfonos por cliente y proponen las columnas <code>telefono_1</code>, <code>telefono_2</code> y <code>telefono_3</code>. ¿Qué inconveniente genera ese diseño?</span></summary><div class="answer"><p>El diseño fija artificialmente una cantidad máxima y crea columnas repetitivas. Un cliente con un solo teléfono deja columnas sin usar; uno con cuatro teléfonos ya no puede representarse correctamente.</p><p>Una mejor solución es registrar los teléfonos en una estructura separada, con una fila por teléfono vinculada al cliente.</p></div></details>
+
+<details class="challenge"><summary><div class="tag-row"><span class="tag design">Modelado</span></div><span class="challenge-title">2. En un festival, una película puede presentarse en varios festivales y un mismo festival puede incluir muchas películas. Además, de cada presentación interesa guardar la fecha, la hora, la sala y la condición de estreno. ¿Cómo representarías esa relación en el modelo?</span></summary><div class="answer"><p>PELICULA y FESTIVAL se relacionan de muchos a muchos: una película puede participar en varios festivales y un festival puede incluir muchas películas.</p><p>La relación puede resolverse mediante una entidad asociativa, por ejemplo PRESENTACION, que vincule ambas entidades y permita guardar datos propios de cada presentación, como <code>fecha</code>, <code>hora</code>, <code>sala</code> y <code>condicion_estreno</code>.</p></div></details>
+
+<details class="challenge"><summary><div class="tag-row"><span class="tag design">Modelo relacional</span></div><span class="challenge-title">3. CARRERA se relaciona 1:N con ALUMNO. ¿En cuál de las dos tablas colocarías la clave foránea y qué representa?</span></summary><div class="answer"><p>La FK se coloca en ALUMNO, que está del lado N. Por ejemplo, <code>alumnos.id_carrera</code> referencia a <code>carreras.id_carrera</code>.</p><p>El valor indica a qué carrera pertenece cada alumno.</p></div></details>
+
+<details class="challenge"><summary><div class="tag-row"><span class="tag design">Claves</span></div><span class="challenge-title">4. INSCRIPCION tiene <code>id_inscripcion</code> como clave primaria. ¿Eso alcanza para impedir que el mismo alumno se inscriba dos veces en la misma comisión?</span></summary><div class="answer"><p>No. La PK evita repetir <code>id_inscripcion</code>, pero cada inscripción duplicada podría recibir un identificador distinto.</p><p>Si la regla de negocio dice que un alumno solo puede inscribirse una vez en una comisión, conviene agregar <code>UNIQUE (id_alumno, id_comision)</code>.</p></div></details>
+</section>
+
+<section class="section-card" id="normalizacion">
+<span class="section-kicker">02 · Calidad del diseño</span>
+<h2>Normalización en situaciones concretas</h2>
+
+<details class="challenge"><summary><div class="tag-row"><span class="tag normal">Normalización</span></div><span class="challenge-title">5. Una tabla guarda <code>id_producto</code>, <code>nombre_producto</code>, <code>id_categoria</code> y <code>nombre_categoria</code>. El nombre de la categoría se repite en todos los productos de esa categoría. ¿Qué problema puede generar esa repetición?</span></summary><div class="answer"><p>Se está repitiendo información que depende de la categoría, no del producto.</p><p>Eso puede provocar anomalías de actualización: si cambia el nombre de una categoría, habría que modificar muchas filas y podrían quedar valores inconsistentes. Conviene guardar el nombre de la categoría una sola vez en CATEGORIAS y relacionar PRODUCTOS mediante una FK.</p></div></details>
+
+<details class="challenge"><summary><div class="tag-row"><span class="tag normal">2FN</span></div><span class="challenge-title">6. En <code>DETALLE_VENTA</code> la clave está formada por <code>id_venta</code> e <code>id_producto</code>. La tabla también guarda <code>fecha_venta</code>, <code>nombre_producto</code>, <code>cantidad</code> y <code>precio_aplicado</code>. ¿Qué datos revisarías porque parecen depender solamente de una parte de la clave?</span></summary><div class="answer"><p><code>fecha_venta</code> depende de la venta, por lo que puede determinarse con <code>id_venta</code>. <code>nombre_producto</code> depende del producto, por lo que puede determinarse con <code>id_producto</code>.</p><p>Esas dependencias parciales muestran que la tabla necesita descomponerse. En cambio, datos como <code>cantidad</code> o <code>precio_aplicado</code> pueden depender de la combinación venta + producto.</p></div></details>
+
+<details class="challenge"><summary><div class="tag-row"><span class="tag normal">3FN</span></div><span class="challenge-title">7. En ALUMNO se guardan <code>id_alumno</code>, <code>nombre</code>, <code>id_carrera</code> y <code>nombre_carrera</code>. Cada alumno pertenece a una carrera y cada <code>id_carrera</code> identifica un único nombre de carrera. ¿Qué dato parece estar guardado donde no corresponde?</span></summary><div class="answer"><p><code>nombre_carrera</code> no describe directamente al alumno: depende de <code>id_carrera</code>.</p><p>Eso constituye una <strong>dependencia transitiva</strong>: <code>id_alumno</code> determina <code>id_carrera</code>, y <code>id_carrera</code> determina <code>nombre_carrera</code>.</p><p>Guardar el nombre de la carrera en ALUMNO genera redundancia y posibles inconsistencias. Lo correcto es mantenerlo en CARRERA y conservar en ALUMNO solamente la FK <code>id_carrera</code>.</p></div></details>
+
+<details class="challenge"><summary><div class="tag-row"><span class="tag normal">Dependencias</span></div><span class="challenge-title">8. En los datos actuales ningún alumno comparte nombre con otro. ¿Alcanza esa observación para usar <code>nombre</code> como identificador único del alumno?</span></summary><div class="answer"><p>No. Que hoy no haya nombres repetidos no garantiza que la regla se mantenga en todos los casos válidos.</p><p>La identificación debe basarse en una regla del dominio, no en una coincidencia del conjunto de datos actual.</p></div></details>
+
+<details class="challenge"><summary><div class="tag-row"><span class="tag normal">1FN</span></div><span class="challenge-title">9. Una tabla tiene una clave primaria y todas sus celdas contienen un solo valor. Sin embargo, el nombre de una materia y el nombre de un docente aparecen repetidos en muchas filas. ¿Puede seguir existiendo redundancia?</span></summary><div class="answer"><p>Sí. Cumplir 1FN no elimina automáticamente la redundancia.</p><p>La tabla puede tener valores atómicos y una PK correcta, pero seguir repitiendo datos que dependen de otras entidades. Por eso se continúa analizando 2FN y 3FN.</p></div></details>
+</section>
+
+<section class="section-card" id="restricciones">
+<span class="section-kicker">03 · Reglas e integridad referencial</span>
+<h2>Qué debería permitir o impedir la base</h2>
+
+<details class="challenge"><summary><div class="tag-row"><span class="tag integrity">Restricciones</span></div><span class="challenge-title">10. La tabla ALUMNO tiene <code>id_alumno</code> como PK y <code>legajo</code> como dato obligatorio. ¿Qué restricción falta si dos alumnos no pueden compartir el mismo legajo?</span></summary><div class="answer"><p>Falta una restricción <code>UNIQUE</code> sobre <code>legajo</code>. La PK sustituta evita repetir <code>id_alumno</code>, pero no impide duplicar un dato natural que también debe ser único.</p></div></details>
+
+<details class="challenge"><summary><div class="tag-row"><span class="tag integrity">ON DELETE RESTRICT</span></div><span class="challenge-title">11. Una carrera tiene alumnos asociados. La FK de ALUMNO hacia CARRERA utiliza <code>ON DELETE RESTRICT</code>. ¿Qué ocurre si se intenta eliminar esa carrera?</span></summary><div class="answer"><p>MySQL rechaza la eliminación mientras existan alumnos que la referencien. La finalidad es evitar dejar filas hijas apuntando a un padre inexistente.</p></div></details>
+
+<details class="challenge"><summary><div class="tag-row"><span class="tag integrity">ON DELETE CASCADE</span></div><span class="challenge-title">12. Cada alumno tiene una fila en PREFERENCIAS_ALUMNO y esas preferencias no tienen sentido si el alumno deja de existir. Si se quisiera usar <code>ON DELETE CASCADE</code>, ¿en qué tabla debería definirse esa acción y qué efecto tendría al eliminar un alumno?</span></summary><div class="answer"><p>La acción se define en la FK de la tabla hija, es decir, en PREFERENCIAS_ALUMNO, porque esa tabla referencia a ALUMNO.</p><p>Al eliminar un alumno, MySQL eliminaría automáticamente su fila relacionada de PREFERENCIAS_ALUMNO. CASCADE tiene sentido cuando la fila hija depende completamente del padre y no necesita conservarse como información histórica independiente.</p></div></details>
+
+<details class="challenge"><summary><div class="tag-row"><span class="tag integrity">ON DELETE SET NULL</span></div><span class="challenge-title">13. En TURNO se guarda la FK <code>id_medico</code>. El sistema quiere conservar el turno histórico aunque el médico sea eliminado. Se propone usar <code>ON DELETE SET NULL</code>. ¿Qué ocurriría con la FK del turno? ¿Ese resultado siempre es posible o depende de cómo esté definida la columna?</span></summary><div class="answer"><p>La fila de TURNO se conserva y su FK <code>id_medico</code> pasa a quedar en <code>NULL</code>.</p><p>Eso solo es posible si la columna admite valores nulos. Si <code>id_medico</code> fue definida como <code>NOT NULL</code>, <code>ON DELETE SET NULL</code> no es compatible con esa definición.</p></div></details>
+
+<details class="challenge"><summary><div class="tag-row"><span class="tag integrity">ON UPDATE CASCADE</span></div><span class="challenge-title">14. Si cambia el valor de una PK en la tabla padre y la FK fue definida con <code>ON UPDATE CASCADE</code>, ¿qué sucede con las filas hijas relacionadas?</span></summary><div class="answer"><p>La FK se actualiza automáticamente en las filas hijas para mantener la relación.</p><p>El cambio se propaga porque así fue definida la acción referencial.</p></div></details>
+
+<details class="challenge"><summary><div class="tag-row"><span class="tag sql">DML</span></div><span class="challenge-title">15. Se ejecuta el siguiente UPDATE y MySQL informa <code>0 row(s) affected</code>. ¿Qué explicación puede haber?</span>
+<div class="code-wrap"><pre><code>UPDATE alumnos
+SET email = 'nuevo@mail.com'
+WHERE id_alumno = 999;</code></pre></div></summary><div class="answer"><p>La sentencia puede ser perfectamente válida. Una posibilidad es que no exista ningún alumno con <code>id_alumno = 999</code>.</p><p>Que se afecten cero filas no significa, por sí solo, que haya un error de sintaxis o de integridad referencial.</p></div></details>
+
+<details class="challenge"><summary><div class="tag-row"><span class="tag integrity">FK</span></div><span class="challenge-title">16. Ahora se intenta insertar un alumno con <code>id_carrera = 999</code>, pero esa carrera no existe. ¿Es el mismo caso que el UPDATE anterior?</span></summary><div class="answer"><p>No. Si existe una FK hacia CARRERA, el INSERT viola integridad referencial porque intenta crear una fila hija que apunta a un padre inexistente.</p><p>En este caso sí corresponde que MySQL rechace la operación.</p></div></details>
+</section>
+
+<section class="section-card" id="consultas">
+<span class="section-kicker">04 · Consultas básicas</span>
+<h2>Interpretar qué datos recupera una consulta</h2>
+
+<details class="challenge"><summary><div class="tag-row"><span class="tag sql">WHERE</span></div><span class="challenge-title">17. ¿Qué productos devuelve esta consulta si existen precios exactamente iguales a 25.000 y 150.000?</span>
+<div class="code-wrap"><pre><code>SELECT nombre, precio
+FROM productos
+WHERE precio BETWEEN 25000 AND 150000;</code></pre></div></summary><div class="answer"><p><code>BETWEEN</code> incluye ambos extremos. Por lo tanto, también aparecen los productos cuyo precio sea exactamente 25.000 o exactamente 150.000.</p></div></details>
+
+<details class="challenge"><summary><div class="tag-row"><span class="tag sql">LIKE</span></div><span class="challenge-title">18. Sin ejecutar la consulta, describí qué característica deben cumplir los nombres recuperados.</span>
+<div class="code-wrap"><pre><code>SELECT nombre
+FROM productos
+WHERE nombre LIKE '_a%';</code></pre></div></summary><div class="answer"><p>El primer carácter puede ser cualquiera, el segundo debe ser <code>a</code> y después puede haber cero o más caracteres.</p><p>El guion bajo representa exactamente un carácter; el porcentaje representa cualquier cantidad de caracteres.</p></div></details>
+
+<details class="challenge"><summary><div class="tag-row"><span class="tag sql">NULL</span></div><span class="challenge-title">19. Se quiere buscar alumnos que todavía no tienen email. ¿Por qué esta condición no es la forma correcta?</span>
+<div class="code-wrap"><pre><code>WHERE email = NULL</code></pre></div></summary><div class="answer"><p><code>NULL</code> no se compara con <code>=</code>. Para buscar valores nulos se utiliza <code>IS NULL</code>.</p></div></details>
+</section>
+
+<section class="section-card" id="joins">
+<span class="section-kicker">05 · JOINs</span>
+<h2>Relacionar tablas sin perder de vista el modelo</h2>
+
+<details class="challenge"><summary><div class="tag-row"><span class="tag join">Producto cartesiano</span></div><span class="challenge-title">20. PRODUCTOS tiene 3 filas y CATEGORIAS tiene 4. ¿Qué problema puede tener esta consulta y cuántas combinaciones podría generar?</span>
+<div class="code-wrap"><pre><code>SELECT p.nombre, c.nombre_categoria
+FROM productos p, categorias c;</code></pre></div></summary><div class="answer"><p>Falta indicar el criterio que relaciona ambas tablas. Puede generarse un producto cartesiano: 3 × 4 = 12 combinaciones.</p><p>El problema no se corrige filtrando “a ojo” después, sino expresando correctamente la relación mediante <code>JOIN ... ON ...</code>.</p></div></details>
+
+<details class="challenge"><summary><div class="tag-row"><span class="tag join">JOINs</span></div><span class="challenge-title">21. Se necesita listar todos los productos, incluso aquellos que todavía no tienen una categoría asignada. ¿Qué tipo de JOIN conviene utilizar si PRODUCTOS queda a la izquierda?</span></summary><div class="answer"><p>Conviene usar <code>LEFT JOIN</code>, porque conserva todas las filas de PRODUCTOS y completa con <code>NULL</code> las columnas de CATEGORIAS cuando no hay coincidencia.</p></div></details>
+
+<details class="challenge"><summary><div class="tag-row"><span class="tag join">JOINs</span></div><span class="challenge-title">22. Queremos mostrar solamente los productos que no tienen una categoría asociada. Si al hacer un LEFT JOIN las columnas de CATEGORIAS quedan en <code>NULL</code> cuando no hay coincidencia, ¿cómo podrías usar eso para quedarte únicamente con esos productos?</span></summary><div class="answer"><p>Después del <code>LEFT JOIN</code>, hay que filtrar las filas en las que no apareció una categoría relacionada.</p><p>Como en esos casos las columnas de CATEGORIAS quedan en <code>NULL</code>, se puede usar una condición como <code>WHERE c.id_categoria IS NULL</code>.</p></div></details>
+
+<details class="challenge"><summary><div class="tag-row"><span class="tag join">JOINs</span></div><span class="challenge-title">23. Una consulta combina CLIENTES con PEDIDOS para mostrar los clientes que realizaron compras. Un mismo cliente puede tener varios pedidos. Si esta consulta devuelve 120 filas, ¿podemos afirmar que hay 120 clientes distintos?</span>
+<div class="code-wrap"><pre><code>SELECT c.id_cliente, c.nombre, p.id_pedido
+FROM clientes c
+INNER JOIN pedidos p
+    ON c.id_cliente = p.id_cliente;</code></pre></div></summary><div class="answer"><p>No. Un mismo cliente puede aparecer varias veces, una por cada pedido relacionado.</p><p>Antes de interpretar la cantidad de filas como cantidad de clientes, hay que pensar qué relación existe entre las tablas y si el JOIN puede duplicar registros de la entidad que estamos contando.</p></div></details>
+
+
+</section>
+
+<section class="section-card" id="agregacion">
+<span class="section-kicker">06 · Funciones de agregación</span>
+<h2>Contar, agrupar y evitar resultados engañosos</h2>
+
+<details class="challenge"><summary><div class="tag-row"><span class="tag group">COUNT</span></div><span class="challenge-title">24. La tabla ALUMNOS tiene 30 filas y 4 alumnos tienen <code>email = NULL</code>. ¿Qué diferencia esperás entre <code>COUNT(*)</code> y <code>COUNT(email)</code>?</span></summary><div class="answer"><p><code>COUNT(*)</code> devuelve 30 porque cuenta filas. <code>COUNT(email)</code> devuelve 26 porque no cuenta los valores NULL de esa columna.</p></div></details>
+
+<details class="challenge"><summary><div class="tag-row"><span class="tag group">AVG</span></div><span class="challenge-title">25. En una columna NOTA hay valores <code>8, 6, NULL, 10</code>. ¿AVG(nota) divide por cuatro?</span></summary><div class="answer"><p>No. AVG ignora los NULL y calcula el promedio sobre los valores conocidos: 8, 6 y 10.</p></div></details>
+
+<details class="challenge"><summary><div class="tag-row"><span class="tag group">WHERE y HAVING</span></div><span class="challenge-title">26. Explicá en palabras qué hace esta consulta, sin limitarte a nombrar las cláusulas SQL.</span>
+<div class="code-wrap"><pre><code>SELECT id_cliente, SUM(total) AS total_pagado
+FROM pedidos
+WHERE estado = 'Pagado'
+GROUP BY id_cliente
+HAVING SUM(total) > 100000;</code></pre></div></summary><div class="answer"><p>Primero toma solamente los pedidos pagados. Después los reúne por cliente y suma cuánto pagó cada uno. Finalmente conserva únicamente a los clientes cuyo total pagado supera 100.000.</p></div></details>
+
+<details class="challenge"><summary><div class="tag-row"><span class="tag join">JOINs</span><span class="tag group">COUNT</span></div><span class="challenge-title">27. Se quiere saber cuántos socios distintos tienen al menos un préstamo. Un mismo socio puede tener varios préstamos. ¿Qué problema tendría contar con <code>COUNT(s.id_socio)</code> después del JOIN?</span>
+<div class="code-wrap"><pre><code>SELECT COUNT(s.id_socio)
+FROM socios s
+INNER JOIN prestamos p
+    ON s.id_socio = p.id_socio;</code></pre></div></summary><div class="answer"><p>El JOIN genera una fila por cada préstamo relacionado. Por eso, un socio con varios préstamos aparece varias veces y <code>COUNT(s.id_socio)</code> cuenta apariciones, no socios distintos.</p><p>Si la pregunta es cuántos socios diferentes tienen préstamos, corresponde contar valores únicos:</p><div class="code-wrap"><pre><code>COUNT(DISTINCT s.id_socio)</code></pre></div></div></details>
+
+<details class="challenge"><summary><div class="tag-row"><span class="tag group">GROUP BY</span></div><span class="challenge-title">28. Una consulta debe mostrar cuántos pedidos hay de cada estado: Pagado, Pendiente y Cancelado. ¿Por qué no alcanza con usar solamente <code>COUNT(*)</code>? ¿Qué papel cumple agrupar por <code>estado</code>?</span></summary><div class="answer"><p><code>COUNT(*)</code> solo daría la cantidad total de pedidos si no se agrupa.</p><p>Al usar <code>GROUP BY estado</code>, las filas se separan en grupos según su estado y el conteo se calcula una vez para cada grupo. Así se obtiene una fila para Pagado, otra para Pendiente y otra para Cancelado.</p></div></details>
+
+<details class="challenge"><summary><div class="tag-row"><span class="tag group">HAVING</span></div><span class="challenge-title">29. Después de agrupar los pedidos por cliente y calcular cuánto compró cada uno, queremos mostrar solamente a los clientes cuyo total supera $100.000. ¿Conviene filtrar esa condición con WHERE o con HAVING? ¿Por qué?</span></summary><div class="answer"><p>Conviene usar <code>HAVING</code>, porque la condición se aplica sobre un resultado calculado para cada grupo, por ejemplo <code>SUM(total)</code>.</p><p><code>WHERE</code> filtra filas antes de agrupar; <code>HAVING</code> permite filtrar los grupos después de calcular las agregaciones.</p></div></details>
+
+<details class="challenge"><summary><div class="tag-row"><span class="tag group">GROUP BY</span></div><span class="challenge-title">30. Se quiere obtener una fila por categoría, mostrando el nombre de la categoría y el precio promedio de sus productos. Mirá esta consulta: ¿está completa o le falta algo para que el resultado represente correctamente una fila por cada categoría?</span>
+<div class="code-wrap"><pre><code>SELECT c.nombre_categoria,
+       AVG(p.precio) AS precio_promedio
+FROM categorias c
+INNER JOIN productos p
+    ON c.id_categoria = p.id_categoria;</code></pre></div></summary><div class="answer"><p>Le falta agrupar por categoría, por ejemplo con <code>GROUP BY c.nombre_categoria</code>.</p><p><code>AVG(p.precio)</code> calcula un valor resumido. Si además queremos mostrar <code>c.nombre_categoria</code>, necesitamos indicar para qué grupo se calcula ese promedio.</p><p>La idea es que cada fila del resultado represente una categoría concreta y su promedio. Por eso, en una consulta agregada, toda columna que aparece en <code>SELECT</code> y no está dentro de una función de agregación debe quedar determinada por el agrupamiento; en este caso, <code>nombre_categoria</code> identifica cada grupo.</p></div></details>
+
+</section>
+
+
+
+<div class="footer-note">Este repaso está pensado para complementar el Quizizz teórico: las situaciones priorizan interpretación, justificación y conexión entre temas.</div>
+</div></main></div>
+
+<script>
+const root=document.documentElement;
+const btn=document.getElementById('themeButton');
+const saved=localStorage.getItem('bd-repaso-theme');
+if(saved) root.dataset.theme=saved;
+btn.addEventListener('click',()=>{
+  const next=root.dataset.theme==='dark'?'light':'dark';
+  root.dataset.theme=next;
+  localStorage.setItem('bd-repaso-theme',next);
+});
+</script>
+</body>
+</html>

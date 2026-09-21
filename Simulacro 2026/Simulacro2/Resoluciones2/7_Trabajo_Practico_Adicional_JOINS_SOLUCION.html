@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Trabajo Práctico Adicional - JOINS · Solución</title>
+<style>
+:root {
+  --ink:#1f2937;
+  --muted:#667085;
+  --line:#d7dde7;
+  --soft:#f7f9fc;
+  --accent:#183b64;
+}
+* { box-sizing:border-box; }
+body {
+  margin:0;
+  font-family:Inter,"Segoe UI",Arial,sans-serif;
+  color:var(--ink);
+  background:#eef2f6;
+}
+.page {
+  width:min(1100px,calc(100% - 32px));
+  margin:32px auto;
+  background:#fff;
+  box-shadow:0 10px 35px rgba(31,41,55,.10);
+}
+header {
+  padding:34px 48px 28px;
+  border-bottom:1px solid var(--line);
+  background:linear-gradient(135deg,#ffffff 0%,#f5f8fc 100%);
+}
+.kicker {
+  font-size:13px;
+  font-weight:700;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:#315f8c;
+  margin-bottom:8px;
+}
+h1 {
+  margin:0;
+  font-size:34px;
+  line-height:1.12;
+  color:var(--accent);
+}
+.subtitle {
+  margin-top:10px;
+  color:var(--muted);
+}
+main {
+  padding:34px 48px 52px;
+}
+.solution {
+  border:1px solid var(--line);
+  border-radius:12px;
+  overflow:hidden;
+  margin-bottom:22px;
+  background:#fff;
+}
+.sol-head {
+  display:flex;
+  align-items:center;
+  gap:14px;
+  padding:15px 18px;
+  background:#f5f8fc;
+  border-bottom:1px solid var(--line);
+}
+.num {
+  width:40px;
+  height:40px;
+  border-radius:9px;
+  display:grid;
+  place-items:center;
+  font-weight:800;
+  color:var(--accent);
+  background:#eaf0f7;
+  flex:0 0 auto;
+}
+h2 {
+  margin:0;
+  font-size:18px;
+  color:#263b53;
+}
+pre {
+  margin:0;
+  padding:20px;
+  overflow:auto;
+  background:#101820;
+  color:#edf4fb;
+  font-family:"Cascadia Code","Consolas",monospace;
+  font-size:13px;
+  line-height:1.55;
+  tab-size:4;
+  white-space:pre;
+}
+pre code {
+  background:transparent;
+  color:inherit;
+  padding:0;
+}
+.execution-note {
+  margin:16px 18px 20px;
+  padding:14px 16px;
+  border-left:4px solid #315f8c;
+  background:#f5f8fc;
+  border-radius:8px;
+  color:#425466;
+  font-size:14px;
+  line-height:1.55;
+}
+.execution-note strong {
+  color:#183b64;
+}
+.execution-note code {
+  font-family:"Cascadia Code","Consolas",monospace;
+  background:#eaf0f7;
+  color:#24364b;
+  padding:.08em .32em;
+  border-radius:4px;
+}
+footer {
+  padding:18px 48px 26px;
+  border-top:1px solid var(--line);
+  color:var(--muted);
+  font-size:12px;
+}
+@media print {
+  body { background:#fff; }
+  .page { width:100%; margin:0; box-shadow:none; }
+  .solution { break-inside:avoid; }
+  pre { white-space:pre-wrap; font-size:10px; }
+}
+</style>
+</head>
+<body>
+<div class="page">
+<header>
+  <div class="kicker">Base de Datos I · Soluciones</div>
+  <h1>Trabajo Práctico Adicional - JOINS</h1>
+  <div class="subtitle">Resolución de los ejercicios</div>
+</header>
+<main>
+  <article class="solution">
+      <div class="sol-head">
+        <div class="num">01</div>
+        <h2>Ejercicio 1. Libros y sus autores</h2>
+      </div>
+      <pre><code>SELECT l.titulo, l.genero, l.anio_publicacion,
+       a.nombre AS nombre_autor,
+       a.apellido AS apellido_autor,
+       a.nacionalidad
+FROM libros l
+INNER JOIN autores a ON l.id_autor = a.id_autor
+WHERE l.anio_publicacion &lt; 1980
+ORDER BY l.anio_publicacion ASC;</code></pre>
+    </article>
+<article class="solution">
+      <div class="sol-head">
+        <div class="num">02</div>
+        <h2>Ejercicio 2. Préstamos realizados</h2>
+      </div>
+      <pre><code>SELECT p.id_prestamo,
+       CONCAT(s.nombre, &#x27; &#x27;, s.apellido) AS socio,
+       l.titulo,
+       p.fecha_prestamo,
+       p.fecha_devolucion,
+       p.estado
+FROM libros l
+INNER JOIN prestamos p ON l.id_libro = p.id_libro
+INNER JOIN socios s ON p.id_socio = s.id_socio
+ORDER BY p.fecha_prestamo DESC;</code></pre>
+    </article>
+<article class="solution">
+      <div class="sol-head">
+        <div class="num">03</div>
+        <h2>Ejercicio 3. Préstamos de determinados géneros</h2>
+      </div>
+      <pre><code>SELECT s.nombre AS nombre_socio,
+       s.apellido AS apellido_socio,
+       l.titulo,
+       l.genero,
+       a.nombre AS nombre_autor,
+       a.apellido AS apellido_autor,
+       p.fecha_prestamo,
+       p.estado
+FROM socios s
+INNER JOIN prestamos p ON s.id_socio = p.id_socio
+INNER JOIN libros l ON p.id_libro = l.id_libro
+INNER JOIN autores a ON l.id_autor = a.id_autor
+WHERE l.genero IN (&#x27;Novela&#x27;, &#x27;Distopia&#x27;)
+ORDER BY p.fecha_prestamo DESC
+LIMIT 5;</code></pre>
+    </article>
+<article class="solution">
+      <div class="sol-head">
+        <div class="num">04</div>
+        <h2>Ejercicio 4. Préstamos recientes</h2>
+      </div>
+      <pre><code>SELECT s.nombre AS nombre_socio,
+       s.apellido AS apellido_socio,
+       l.titulo AS libro,
+       a.nombre AS nombre_autor,
+       a.apellido AS apellido_autor,
+       p.fecha_prestamo,
+       p.estado
+FROM socios s
+INNER JOIN prestamos p ON s.id_socio = p.id_socio
+INNER JOIN libros l ON p.id_libro = l.id_libro
+INNER JOIN autores a ON l.id_autor = a.id_autor
+WHERE p.fecha_prestamo &gt;= DATE_SUB(CURDATE(), INTERVAL 30 DAY)
+ORDER BY p.fecha_prestamo DESC;</code></pre>
+    </article>
+<article class="solution">
+      <div class="sol-head">
+        <div class="num">05</div>
+        <h2>Ejercicio 5. Todos los socios y sus préstamos</h2>
+      </div>
+      <pre><code>SELECT CONCAT(s.nombre, &#x27; &#x27;, s.apellido) AS socio,
+       s.email,
+       s.estado AS estado_socio,
+       l.titulo,
+       p.fecha_prestamo,
+       p.estado AS estado_prestamo
+FROM socios s
+LEFT JOIN prestamos p ON s.id_socio = p.id_socio
+LEFT JOIN libros l ON p.id_libro = l.id_libro
+ORDER BY s.apellido, s.nombre;</code></pre>
+    </article>
+<article class="solution">
+      <div class="sol-head">
+        <div class="num">06</div>
+        <h2>Ejercicio 6. Autores y libros publicados</h2>
+      </div>
+      <pre><code>SELECT CONCAT(a.nombre, &#x27; &#x27;, a.apellido) AS autor,
+       a.nacionalidad,
+       COALESCE(l.titulo, &#x27;Sin libros cargados&#x27;) AS titulo,
+       COALESCE(l.genero, &#x27;Sin género&#x27;) AS genero
+FROM autores a
+LEFT JOIN libros l ON a.id_autor = l.id_autor
+ORDER BY a.apellido, a.nombre;</code></pre>
+    </article>
+<article class="solution">
+      <div class="sol-head">
+        <div class="num">07</div>
+        <h2>Ejercicio 7. Libros nunca prestados</h2>
+      </div>
+      <pre><code>SELECT l.titulo,
+       l.genero,
+       l.anio_publicacion,
+       CONCAT(a.nombre, &#x27; &#x27;, a.apellido) AS autor,
+       l.disponible
+FROM libros l
+LEFT JOIN prestamos p ON l.id_libro = p.id_libro
+INNER JOIN autores a ON l.id_autor = a.id_autor
+WHERE p.id_prestamo IS NULL
+ORDER BY l.titulo;</code></pre>
+    </article>
+<article class="solution">
+      <div class="sol-head">
+        <div class="num">08</div>
+        <h2>Ejercicio 8. Préstamos pendientes</h2>
+      </div>
+      <pre><code>SELECT CONCAT(s.nombre, &#x27; &#x27;, s.apellido) AS socio,
+       s.email,
+       l.titulo AS libro,
+       CONCAT(a.nombre, &#x27; &#x27;, a.apellido) AS autor,
+       p.fecha_prestamo,
+       p.estado,
+       DATEDIFF(CURDATE(), p.fecha_prestamo) AS dias_transcurridos
+FROM prestamos p
+INNER JOIN socios s ON p.id_socio = s.id_socio
+INNER JOIN libros l ON p.id_libro = l.id_libro
+INNER JOIN autores a ON l.id_autor = a.id_autor
+WHERE s.estado = &#x27;Activo&#x27;
+  AND p.estado IN (&#x27;Activo&#x27;, &#x27;Vencido&#x27;)
+  AND DATEDIFF(CURDATE(), p.fecha_prestamo) &gt; 15
+ORDER BY dias_transcurridos DESC;</code></pre>
+      <div class="execution-note">
+        <strong>Nota sobre el orden de ejecución:</strong>
+        debido al orden lógico de ejecución de MySQL, la cláusula <code>WHERE</code> se evalúa antes que el <code>SELECT</code>.
+        Por este motivo, en el <code>WHERE</code> todavía no está disponible el alias <code>dias_transcurridos</code> y es necesario repetir la expresión <code>DATEDIFF(...)</code>.
+        En cambio, <code>ORDER BY</code> se evalúa después del <code>SELECT</code>, por lo que allí sí puede utilizarse el alias.
+      </div>
+
+    </article>
+<article class="solution">
+      <div class="sol-head">
+        <div class="num">09</div>
+        <h2>Ejercicio 9. Autores vinculados a préstamos</h2>
+      </div>
+      <pre><code>SELECT DISTINCT
+       CONCAT(a.nombre, &#x27; &#x27;, a.apellido) AS autor,
+       a.nacionalidad
+FROM autores a
+INNER JOIN libros l ON a.id_autor = l.id_autor
+INNER JOIN prestamos p ON l.id_libro = p.id_libro
+INNER JOIN socios s ON p.id_socio = s.id_socio
+WHERE s.estado = &#x27;Activo&#x27;
+ORDER BY autor;</code></pre>
+    </article>
+<article class="solution">
+      <div class="sol-head">
+        <div class="num">10</div>
+        <h2>Ejercicio 10. Búsqueda de libros disponibles</h2>
+      </div>
+      <pre><code>SELECT l.titulo,
+       l.genero,
+       l.anio_publicacion,
+       CONCAT(a.nombre, &#x27; &#x27;, a.apellido) AS autor
+FROM libros l
+INNER JOIN autores a ON l.id_autor = a.id_autor
+WHERE l.disponible = TRUE
+  AND l.genero = &#x27;Novela&#x27;
+  AND l.titulo LIKE &#x27;%a%&#x27;
+ORDER BY l.anio_publicacion DESC
+LIMIT 3;</code></pre>
+    </article>
+</main>
+<footer>
+  Base de Datos I · Trabajo Práctico Adicional - JOINS · Solución
+</footer>
+</div>
+</body>
+</html>

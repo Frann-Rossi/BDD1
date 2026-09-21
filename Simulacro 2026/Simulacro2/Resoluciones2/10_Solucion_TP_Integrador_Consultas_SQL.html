@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Solución · Trabajo Práctico Integrador</title>
+<style>
+:root {
+  --bg:#f5f7fb;
+  --surface:#ffffff;
+  --text:#1d2735;
+  --muted:#687386;
+  --line:#dce4ed;
+  --primary:#174f78;
+  --primary-soft:#edf4f8;
+  --code:#0f172a;
+  --code-text:#f8fafc;
+  --shadow:0 10px 26px rgba(30,50,70,.08);
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  line-height:1.5;
+}
+.wrap{
+  width:min(1050px,calc(100% - 32px));
+  margin:0 auto;
+  padding:40px 0 60px;
+}
+.header{margin-bottom:26px}
+.kicker{
+  color:var(--primary);
+  font-size:.8rem;
+  font-weight:800;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  margin-bottom:6px;
+}
+h1{
+  margin:0;
+  font-size:clamp(2rem,4vw,3rem);
+  line-height:1.08;
+  letter-spacing:-.03em;
+}
+.subtitle{
+  margin:10px 0 0;
+  color:var(--muted);
+}
+.solution{
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:20px 22px;
+  margin-bottom:18px;
+  box-shadow:var(--shadow);
+}
+.solution h2{
+  margin:0 0 12px;
+  color:var(--primary);
+  font-size:1.05rem;
+}
+.integrador{
+  border:2px solid var(--primary);
+}
+.badge{
+  display:inline-block;
+  margin-left:8px;
+  padding:3px 8px;
+  border-radius:999px;
+  background:var(--primary-soft);
+  color:var(--primary);
+  font-size:.7rem;
+  font-weight:800;
+  text-transform:uppercase;
+  letter-spacing:.04em;
+  vertical-align:middle;
+}
+pre{
+  margin:0;
+  padding:17px 18px;
+  overflow-x:auto;
+  background:var(--code);
+  color:var(--code-text);
+  border-radius:11px;
+  font-family:"Cascadia Code",Consolas,monospace;
+  font-size:.88rem;
+  line-height:1.55;
+  white-space:pre;
+}
+code{font-family:inherit}
+@media(max-width:700px){
+  .wrap{padding-top:26px}
+  .solution{padding:16px}
+  pre{font-size:.8rem}
+}
+@media print{
+  body{background:#fff}
+  .wrap{width:100%;padding:0}
+  .solution{box-shadow:none;break-inside:avoid}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="header">
+    <div class="kicker">Base de Datos I · MySQL</div>
+    <h1>Solución · Trabajo Práctico Integrador</h1>
+    <p class="subtitle">Resolución de las consultas SQL.</p>
+  </header>
+
+  
+    <section class="solution">
+      <h2>Ejercicio 1</h2>
+      <pre><code>SELECT p.nombre_producto, p.marca, c.nombre_categoria AS categoria, p.precio, p.stock
+FROM productos p
+INNER JOIN categorias c ON p.categoria_id = c.categoria_id
+WHERE p.activo_producto = TRUE 
+  AND p.stock &gt; 0
+  AND p.precio BETWEEN 25000 AND 150000
+ORDER BY c.nombre_categoria, p.precio DESC;</code></pre>
+    </section>
+    
+    <section class="solution">
+      <h2>Ejercicio 2</h2>
+      <pre><code>SELECT p.pedido_id, p.fecha_pedido, c.nombre_cliente, c.apellido_cliente, p.estado, p.canal
+FROM clientes c
+INNER JOIN pedidos p ON c.cliente_id = p.cliente_id
+WHERE p.fecha_pedido BETWEEN &#x27;2026-01-01&#x27; AND &#x27;2026-06-30&#x27;
+  AND p.estado IN (&#x27;Pagado&#x27;, &#x27;Pendiente&#x27;)
+ORDER BY p.fecha_pedido DESC;</code></pre>
+    </section>
+    
+    <section class="solution">
+      <h2>Ejercicio 3</h2>
+      <pre><code>SELECT p.pedido_id, p.fecha_pedido,
+       CONCAT(c.nombre_cliente, &#x27; &#x27;, c.apellido_cliente) AS cliente, 
+       pr.nombre_producto AS producto,
+       ca.nombre_categoria AS categoria,
+       dp.cantidad,
+       pr.precio,
+       (pr.precio * dp.cantidad) AS importe
+FROM pedidos p
+INNER JOIN clientes c ON p.cliente_id = c.cliente_id
+INNER JOIN detalles_pedido dp ON p.pedido_id = dp.pedido_id
+INNER JOIN productos pr ON dp.producto_id = pr.producto_id
+INNER JOIN categorias ca ON pr.categoria_id = ca.categoria_id
+WHERE p.canal = &#x27;Web&#x27;
+  AND p.fecha_pedido BETWEEN &#x27;2026-06-01&#x27; AND &#x27;2026-08-31&#x27;
+  AND p.estado &lt;&gt; &#x27;Cancelado&#x27;
+  AND (pr.precio * dp.cantidad) &gt; 100000;</code></pre>
+    </section>
+    
+    <section class="solution">
+      <h2>Ejercicio 4</h2>
+      <pre><code>SELECT COUNT(DISTINCT p.pedido_id) AS cantidad_pedidos,
+       SUM(dp.cantidad) AS cantidad_unidades,
+       SUM(dp.cantidad * pr.precio) AS importe_total,
+       MIN(pr.precio) AS menor_precio,
+       MAX(pr.precio) AS mayor_precio
+FROM pedidos p
+INNER JOIN detalles_pedido dp ON p.pedido_id = dp.pedido_id
+INNER JOIN productos pr ON dp.producto_id = pr.producto_id 
+WHERE p.estado = &#x27;Pagado&#x27;
+  AND YEAR(p.fecha_pedido) = 2026;</code></pre>
+    </section>
+    
+    <section class="solution">
+      <h2>Ejercicio 5</h2>
+      <pre><code>SELECT p.estado,
+       COUNT(DISTINCT p.pedido_id) AS cantidad_pedidos,
+       SUM(dp.cantidad) AS cantidad,
+       SUM(pr.precio * dp.cantidad) AS importe
+FROM pedidos p 
+INNER JOIN detalles_pedido dp ON p.pedido_id = dp.pedido_id
+INNER JOIN productos pr ON dp.producto_id = pr.producto_id
+WHERE YEAR(p.fecha_pedido) = 2026
+GROUP BY p.estado
+ORDER BY importe DESC;</code></pre>
+    </section>
+    
+    <section class="solution">
+      <h2>Ejercicio 6</h2>
+      <pre><code>SELECT MONTH(p.fecha_pedido) AS mes,
+       COUNT(DISTINCT p.pedido_id) AS cant_pedidos,
+       SUM(dp.cantidad) AS cantidad_unidades,
+       SUM(pr.precio * dp.cantidad) AS importe
+FROM pedidos p
+INNER JOIN detalles_pedido dp ON p.pedido_id = dp.pedido_id
+INNER JOIN productos pr ON dp.producto_id = pr.producto_id
+WHERE p.estado = &#x27;Pagado&#x27; 
+  AND YEAR(p.fecha_pedido) = 2026
+GROUP BY mes
+ORDER BY mes;</code></pre>
+    </section>
+    
+    <section class="solution">
+      <h2>Ejercicio 7</h2>
+      <pre><code>SELECT c.nombre_cliente,
+       c.apellido_cliente,
+       COUNT(p.pedido_id) AS cant_pedidos,
+       MAX(p.fecha_pedido) AS fecha_ultimo_pedido,
+       DATEDIFF(CURDATE(), MAX(p.fecha_pedido)) AS dias_transcurridos
+FROM pedidos p
+INNER JOIN clientes c ON p.cliente_id = c.cliente_id 
+WHERE p.estado = &#x27;Pagado&#x27;
+  AND YEAR(p.fecha_pedido) = 2026
+GROUP BY c.cliente_id, c.nombre_cliente, c.apellido_cliente
+HAVING cant_pedidos &gt;= 2
+ORDER BY dias_transcurridos DESC;</code></pre>
+    </section>
+    
+    <section class="solution">
+      <h2>Ejercicio 8</h2>
+      <pre><code>SELECT p.canal,
+       p.estado,
+       COUNT(DISTINCT p.pedido_id) AS cant_pedidos, 
+       SUM(dp.cantidad) AS cantidad_unidades,
+       SUM(pr.precio * dp.cantidad) AS total
+FROM pedidos p 
+INNER JOIN detalles_pedido dp ON p.pedido_id = dp.pedido_id
+INNER JOIN productos pr ON dp.producto_id = pr.producto_id
+WHERE p.fecha_pedido &gt;= DATE_SUB(CURDATE(), INTERVAL 3 MONTH)
+GROUP BY p.canal, p.estado
+HAVING cant_pedidos &gt;= 2;</code></pre>
+    </section>
+    
+    <section class="solution">
+      <h2>Ejercicio 9</h2>
+      <pre><code>SELECT c.nombre_categoria,
+       SUM(dp.cantidad) AS cantidad_unidades,
+       SUM(pr.precio * dp.cantidad) AS importe
+FROM categorias c
+INNER JOIN productos pr ON c.categoria_id = pr.categoria_id
+INNER JOIN detalles_pedido dp ON pr.producto_id = dp.producto_id
+INNER JOIN pedidos pe ON dp.pedido_id = pe.pedido_id
+WHERE pe.estado = &#x27;Pagado&#x27; 
+  AND YEAR(pe.fecha_pedido) = 2026
+GROUP BY c.nombre_categoria
+HAVING cantidad_unidades &gt; 10 
+   AND importe &gt; 300000
+ORDER BY importe DESC;</code></pre>
+    </section>
+    
+    <section class="solution">
+      <h2>Ejercicio 10</h2>
+      <pre><code>SELECT c.cliente_id,
+       c.nombre_cliente,
+       c.apellido_cliente,
+       COUNT(DISTINCT p.pedido_id) AS cant_pedidos,
+       COALESCE(SUM(dp.cantidad), 0) AS cantidad_unidades,
+       MIN(p.fecha_pedido) AS fecha_primer_pedido,
+       MAX(p.fecha_pedido) AS fecha_ultimo_pedido
+FROM clientes c
+LEFT JOIN pedidos p ON c.cliente_id = p.cliente_id
+LEFT JOIN detalles_pedido dp ON p.pedido_id = dp.pedido_id
+GROUP BY c.cliente_id, c.nombre_cliente, c.apellido_cliente
+ORDER BY cant_pedidos DESC;</code></pre>
+    </section>
+    
+    <section class="solution integrador">
+      <h2>Ejercicio 11 <span class="badge">Integrador</span></h2>
+      <pre><code>SELECT MONTH(p.fecha_pedido) AS mes,
+       c.nombre_categoria,
+       COUNT(DISTINCT p.pedido_id) AS cant_pedidos,
+       SUM(dp.cantidad) AS cant_unidades,
+       SUM(dp.cantidad * pr.precio) AS importe
+FROM categorias c
+INNER JOIN productos pr ON c.categoria_id = pr.categoria_id
+INNER JOIN detalles_pedido dp ON pr.producto_id = dp.producto_id
+INNER JOIN pedidos p ON dp.pedido_id = p.pedido_id
+WHERE p.estado = &#x27;Pagado&#x27;
+  AND YEAR(p.fecha_pedido) = 2026
+  AND pr.activo_producto = TRUE
+GROUP BY mes, c.nombre_categoria
+HAVING cant_unidades &gt; 10
+   AND importe &gt; 250000
+ORDER BY mes, importe DESC;</code></pre>
+    </section>
+    
+</div>
+</body>
+</html>
