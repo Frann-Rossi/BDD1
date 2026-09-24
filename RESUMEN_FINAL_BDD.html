@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Resumen Final — Base de Datos I</title>
+<style>
+  :root{
+    --bg:#0f172a; --card:#1e293b; --card2:#243352; --ink:#e2e8f0; --muted:#94a3b8;
+    --accent:#38bdf8; --accent2:#a78bfa; --ok:#4ade80; --warn:#fbbf24; --bad:#f87171;
+    --code:#0b1220; --border:#334155;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.65;font-size:17px;padding-bottom:60px}
+  header{background:linear-gradient(135deg,#1e3a8a,#6d28d9);padding:28px 20px;text-align:center}
+  header h1{margin:0;font-size:1.6rem}
+  header p{margin:6px 0 0;color:#dbeafe;font-size:.95rem}
+  .wrap{max-width:820px;margin:0 auto;padding:0 16px}
+  nav{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px 18px;margin:20px auto}
+  nav h2{margin:0 0 8px;font-size:1rem;color:var(--accent)}
+  nav ol{margin:0;padding-left:20px;columns:2;column-gap:20px}
+  nav a{color:var(--ink);text-decoration:none;font-size:.92rem}
+  nav a:hover{color:var(--accent)}
+  section{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px 20px 8px;margin:18px auto}
+  h2.sec{color:var(--accent2);border-bottom:2px solid var(--border);padding-bottom:8px;margin-top:6px;font-size:1.3rem}
+  h3{color:var(--accent);margin-top:26px;font-size:1.1rem}
+  h4{color:#e2e8f0;margin-bottom:6px}
+  code{background:#0b1220;color:#7dd3fc;padding:2px 6px;border-radius:5px;font-size:.9em;font-family:"SF Mono",Consolas,Monaco,monospace}
+  pre{background:var(--code);border:1px solid var(--border);border-left:4px solid var(--accent);
+    border-radius:10px;padding:14px 16px;overflow-x:auto;margin:12px 0;font-size:.86rem;line-height:1.5}
+  pre code{background:none;color:#cbd5e1;padding:0}
+  .kw{color:#c084fc;font-weight:600}
+  .fn{color:#5eead4}
+  .st{color:#fca5a5}
+  .cm{color:#64748b;font-style:italic}
+  table{width:100%;border-collapse:collapse;margin:12px 0;font-size:.85rem}
+  th,td{border:1px solid var(--border);padding:7px 9px;text-align:left}
+  th{background:var(--card2);color:var(--accent)}
+  .tag{display:inline-block;font-size:.72rem;font-weight:700;padding:2px 9px;border-radius:20px;margin-left:6px;vertical-align:middle}
+  .facil{background:#14532d;color:#86efac}
+  .media{background:#78350f;color:#fcd34d}
+  .dificil{background:#7c2d12;color:#fca5a5}
+  .final{background:#4c1d95;color:#ddd6fe}
+  .box{border-radius:10px;padding:12px 16px;margin:14px 0}
+  .box.ok{background:rgba(74,222,128,.08);border:1px solid #14532d}
+  .box.warn{background:rgba(251,191,36,.08);border:1px solid #78350f}
+  .box.bad{background:rgba(248,113,113,.08);border:1px solid #7c2d12}
+  .box.tip{background:rgba(56,189,248,.08);border:1px solid #0c4a6e}
+  .box b{color:#fff}
+  .q{background:var(--card2);border-radius:10px;padding:12px 16px;margin:14px 0;border-left:4px solid var(--accent2)}
+  .q p{margin:6px 0}
+  .sol summary{cursor:pointer;color:var(--accent);font-weight:600;font-size:.9rem;margin-top:6px}
+  .sol[open] summary{color:var(--ok)}
+  ul{padding-left:22px}
+  li{margin:5px 0}
+  .pill{display:inline-block;background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:3px 10px;margin:3px;font-size:.82rem}
+  .center{text-align:center}
+  hr{border:none;border-top:1px dashed var(--border);margin:22px 0}
+  .big{font-size:1.05rem}
+  .emoji{font-size:1.2em}
+  a.top{display:block;text-align:right;color:var(--muted);font-size:.78rem;text-decoration:none;margin-top:10px}
+</style>
+</head>
+<body>
+<header>
+  <h1>📚 Resumen Final — Base de Datos I</h1>
+  <p>Todo lo que entra mañana · para Agustín · UTN FRMDP</p>
+</header>
+
+<div class="wrap">
+
+<nav id="top">
+  <h2>Índice</h2>
+  <ol>
+    <li><a href="#estructura">Estructura del examen</a></li>
+    <li><a href="#bd">La base de datos de ejemplo</a></li>
+    <li><a href="#teoria">Teoría: BDD, modelos</a></li>
+    <li><a href="#der">DER (Entidad-Relación)</a></li>
+    <li><a href="#relacional">DER → Modelo relacional</a></li>
+    <li><a href="#norm">Normalización (1FN,2FN,3FN)</a></li>
+    <li><a href="#integridad">Integridad referencial</a></li>
+    <li><a href="#select">SELECT, WHERE, ORDER BY</a></li>
+    <li><a href="#group">GROUP BY, HAVING</a></li>
+    <li><a href="#joins">JOINs</a></li>
+    <li><a href="#sub">Subconsultas</a></li>
+    <li><a href="#sp">Procedimientos almacenados</a></li>
+    <li><a href="#errores">Errores típicos (los tuyos)</a></li>
+    <li><a href="#checklist">Checklist final</a></li>
+  </ol>
+</nav>
+
+<!-- ESTRUCTURA -->
+<section id="estructura">
+  <h2 class="sec">1 · Estructura del examen final</h2>
+  <p>Según los finales reales de la cátedra, el examen tiene <b>tres bloques</b>:</p>
+  <table>
+    <tr><th>Bloque</th><th>Qué piden</th><th>Condición</th></tr>
+    <tr><td><b>1) DER + estructura de BD</b></td><td>Modelar un enunciado: entidades, atributos, relaciones, cardinalidad, PK y FK</td><td class="big">⚠️ <b>≥ 60% correcto</b> para aprobar</td></tr>
+    <tr><td><b>2) Subconsultas</b></td><td>3 ejercicios <b>sin usar JOIN</b></td><td>Al menos <b>2 de 3</b> bien</td></tr>
+    <tr><td><b>3) Procedimientos almacenados</b></td><td>3 ejercicios (acá <b>sí</b> se puede usar JOIN)</td><td>Al menos <b>2 de 3</b> bien</td></tr>
+  </table>
+  <div class="box warn">
+    <b>⏱ Estrategia de tiempo:</b> el DER vale más y es condición. Empezá por ahí con la cabeza fresca. Después subconsultas (más mecánicas) y SP (los más largos de escribir).
+  </div>
+  <div class="box tip">
+    <b>Reglas del profe (están escritas en el examen):</b> resolver con lapicera, letra legible (descuentan puntos si no se entiende), numerar las hojas y poner el nombre en todas. Ante duda de interpretación, <b>escribí tu interpretación</b> al lado — la toman en cuenta.
+  </div>
+  <a class="top" href="#top">↑ índice</a>
+</section>
+
+<!-- BASE DE DATOS -->
+<section id="bd">
+  <h2 class="sec">2 · La base de datos de ejemplo 🏪</h2>
+  <p>Todo el resumen usa <b>una sola base de datos</b> (una tienda). Memorizá estas tablas y vas a poder seguir cada consulta mentalmente.</p>
+
+  <h4>Estructura (tablas y claves)</h4>
+<pre><code><span class="cm">-- 1:N  una categoría tiene muchos productos</span>
+CATEGORIAS  (id_categoria PK, nombre)
+PRODUCTOS   (id_producto PK, nombre, precio, stock, id_categoria FK)
+
+<span class="cm">-- 1:N  un cliente hace muchas ventas</span>
+CLIENTES    (id_cliente PK, nombre, ciudad, email)
+VENTAS      (id_venta PK, fecha, id_cliente FK)
+
+<span class="cm">-- N:M  una venta tiene muchos productos y un producto está en muchas ventas</span>
+<span class="cm">--      => tabla intermedia con atributos propios (cantidad, precio_unitario)</span>
+DETALLE_VENTA (id_detalle PK, id_venta FK, id_producto FK, cantidad, precio_unitario)</code></pre>
+
+  <h4>Datos de ejemplo (imaginátelos al leer)</h4>
+  <p><b>CATEGORIAS</b></p>
+  <table><tr><th>id_categoria</th><th>nombre</th></tr>
+  <tr><td>1</td><td>Bebidas</td></tr><tr><td>2</td><td>Snacks</td></tr><tr><td>3</td><td>Limpieza</td></tr></table>
+
+  <p><b>PRODUCTOS</b></p>
+  <table><tr><th>id_producto</th><th>nombre</th><th>precio</th><th>stock</th><th>id_categoria</th></tr>
+  <tr><td>10</td><td>Coca 1.5L</td><td>1200</td><td>50</td><td>1</td></tr>
+  <tr><td>11</td><td>Agua 500ml</td><td>600</td><td>3</td><td>1</td></tr>
+  <tr><td>12</td><td>Papas fritas</td><td>900</td><td>40</td><td>2</td></tr>
+  <tr><td>13</td><td>Lavandina</td><td>1500</td><td>20</td><td>3</td></tr></table>
+
+  <p><b>CLIENTES</b></p>
+  <table><tr><th>id_cliente</th><th>nombre</th><th>ciudad</th><th>email</th></tr>
+  <tr><td>100</td><td>Ana</td><td>Mar del Plata</td><td>ana@mail.com</td></tr>
+  <tr><td>101</td><td>Beto</td><td>Balcarce</td><td>beto@mail.com</td></tr>
+  <tr><td>102</td><td>Caro</td><td>Mar del Plata</td><td>NULL</td></tr></table>
+
+  <p><b>VENTAS</b></p>
+  <table><tr><th>id_venta</th><th>fecha</th><th>id_cliente</th></tr>
+  <tr><td>1</td><td>2024-05-10</td><td>100</td></tr>
+  <tr><td>2</td><td>2024-05-10</td><td>101</td></tr>
+  <tr><td>3</td><td>2024-06-01</td><td>100</td></tr></table>
+
+  <p><b>DETALLE_VENTA</b></p>
+  <table><tr><th>id_detalle</th><th>id_venta</th><th>id_producto</th><th>cantidad</th><th>precio_unitario</th></tr>
+  <tr><td>1</td><td>1</td><td>10</td><td>2</td><td>1200</td></tr>
+  <tr><td>2</td><td>1</td><td>12</td><td>1</td><td>900</td></tr>
+  <tr><td>3</td><td>2</td><td>13</td><td>3</td><td>1500</td></tr>
+  <tr><td>4</td><td>3</td><td>10</td><td>1</td><td>1200</td></tr></table>
+  <a class="top" href="#top">↑ índice</a>
+</section>
+
+<!-- TEORIA -->
+<section id="teoria">
+  <h2 class="sec">3 · Teoría: bases de datos y modelos</h2>
+  <ul>
+    <li><b>Base de datos:</b> conjunto de datos organizados y relacionados, almacenados de forma que se puedan consultar y modificar. El programa que la gestiona es el <b>SGBD / DBMS</b> (ej. MySQL).</li>
+    <li><b>Ventajas vs archivos sueltos:</b> evita redundancia, mantiene la integridad, permite acceso concurrente y controla la seguridad.</li>
+    <li><b>Los 3 modelos (niveles de abstracción):</b>
+      <ul>
+        <li><b>Conceptual</b> → el <b>DER</b> (independiente del motor).</li>
+        <li><b>Lógico</b> → el <b>modelo relacional</b> (tablas, PK, FK).</li>
+        <li><b>Físico</b> → cómo se guarda realmente en disco.</li>
+      </ul>
+    </li>
+  </ul>
+  <div class="box tip"><b>ACID</b> (propiedades de una transacción): <b>A</b>tomicidad (todo o nada), <b>C</b>onsistencia (respeta las reglas), <b>A</b>islamiento (Isolation, no se pisan entre sí) y <b>D</b>urabilidad (una vez confirmada, persiste).</div>
+
+  <h3>Álgebra relacional (por si cae teoría)</h3>
+  <ul>
+    <li><b>Selección (σ):</b> elige <b>filas</b> que cumplen una condición → equivale a <code>WHERE</code>.</li>
+    <li><b>Proyección (π):</b> elige <b>columnas</b> → equivale a poner columnas en el <code>SELECT</code>.</li>
+    <li><b>Producto cartesiano (×)</b> y <b>Join (⋈):</b> combinan tablas.</li>
+    <li><b>Unión, Intersección, Diferencia:</b> operaciones entre conjuntos de filas.</li>
+  </ul>
+  <a class="top" href="#top">↑ índice</a>
+</section>
+
+<!-- DER -->
+<section id="der">
+  <h2 class="sec">4 · Diagrama Entidad-Relación (DER) 🎯 <span class="tag final">el 60%</span></h2>
+
+  <h3>Conceptos base</h3>
+  <ul>
+    <li><b>Entidad:</b> un concepto del mundo real que guardamos (Cliente, Producto, Venta). Se dibuja como una tabla/rectángulo.</li>
+    <li><b>Atributo:</b> una característica de la entidad (nombre, precio, DNI).</li>
+    <li><b>Clave primaria (PK):</b> atributo que identifica <b>de forma única</b> cada fila (normalmente <code>id_...</code> autoincremental).</li>
+    <li><b>Clave foránea (FK):</b> la PK de otra entidad copiada como atributo, para relacionar dos tablas.</li>
+    <li><b>Relación:</b> el vínculo entre entidades (un cliente <i>realiza</i> ventas).</li>
+    <li><b>Cardinalidad:</b> cuántos de un lado se vinculan con cuántos del otro.</li>
+  </ul>
+
+  <h3>Los 3 tipos de cardinalidad</h3>
+  <table>
+    <tr><th>Tipo</th><th>Ejemplo</th><th>Cómo se resuelve</th></tr>
+    <tr><td><b>1:1</b> uno a uno</td><td>Persona ↔ DNI</td><td>La FK va en cualquiera de las dos tablas.</td></tr>
+    <tr><td><b>1:N</b> uno a muchos</td><td>Cliente → Ventas</td><td>La <b>FK va del lado N</b> (el "muchos").</td></tr>
+    <tr><td><b>N:M</b> muchos a muchos</td><td>Venta ↔ Producto</td><td>Se crea una <b>tabla intermedia</b> con las 2 FK.</td></tr>
+  </table>
+
+  <div class="box ok">
+    <b>🔑 Regla de oro de la FK (1:N):</b> "La FK vive en el lado de los <b>muchos</b>, apuntando al lado del <b>uno</b>." Un cliente tiene muchas ventas → cada <i>venta</i> guarda <code>id_cliente</code>. (Nunca al revés: no podés meter muchos id_venta en un cliente.)
+  </div>
+
+  <div class="box warn">
+    <b>⚠️ La trampa que más se cobra — N:M:</b> cuando <b>ambos</b> lados pueden tener varios del otro, <b>NO</b> va una FK suelta. Va una <b>tabla intermedia</b>. Y esa tabla suele llevar <b>atributos propios</b> (cantidad, fecha, nota, monto...).
+    <br><br><b>Señal de alarma:</b> las palabras <i>"varios / múltiples / uno o más"</i> en las <b>dos</b> direcciones = N:M seguro.
+  </div>
+
+  <h3>Caso especial: relación entre una entidad y sí misma / participantes fijos</h3>
+  <p>Cuando algo relaciona a una entidad con otra del <b>mismo tipo</b>, en cantidad <b>fija</b> (ej. una <i>partida</i> enfrenta a <b>2</b> equipos), no se usa tabla intermedia: se ponen <b>2 FK con nombres de rol distintos</b> apuntando a la misma tabla.</p>
+<pre><code>PARTIDA (id_partida PK, fecha, resultado,
+         id_equipo_local     FK <span class="cm">-> EQUIPO</span>,
+         id_equipo_visitante FK <span class="cm">-> EQUIPO</span>)</code></pre>
+  <p class="muted">Cantidad fija (siempre 2) → varias FK con roles. Cantidad variable (muchos) → tabla intermedia N:M.</p>
+
+  <h3>Los 6 pasos para pasar de enunciado a DER</h3>
+  <ol>
+    <li><b>Subrayá los sustantivos</b> importantes del enunciado → candidatos a <b>entidades</b>.</li>
+    <li>Para cada entidad, listá sus <b>atributos</b> (lo que "se guarda de...") y elegí su <b>PK</b>.</li>
+    <li>Buscá los <b>verbos</b> que conectan entidades → son las <b>relaciones</b>.</li>
+    <li>Definí la <b>cardinalidad</b> de cada relación (preguntá "¿cuántos de A por cada B y viceversa?").</li>
+    <li>Colocá las <b>FK</b>: 1:N → FK del lado N. N:M → tabla intermedia.</li>
+    <li>Revisá que <b>cada dato del enunciado</b> tenga dónde guardarse.</li>
+  </ol>
+
+  <h3>Mini-ejercicios de modelado <span class="tag media">media</span></h3>
+  <div class="q">
+    <p><b>a)</b> "Un autor escribe muchos libros y cada libro tiene un solo autor." ¿Tipo y dónde va la FK?</p>
+    <details class="sol"><summary>Ver respuesta</summary>
+      <p>1:N. La FK <code>id_autor</code> va en <b>LIBROS</b> (lado muchos).</p>
+    </details>
+  </div>
+  <div class="q">
+    <p><b>b)</b> "Un alumno cursa varias materias y una materia tiene varios alumnos; se registra la nota final de cada alumno en cada materia." ¿Cómo lo modelás?</p>
+    <details class="sol"><summary>Ver respuesta</summary>
+      <p>N:M → tabla intermedia <code>CURSADA (id PK, id_alumno FK, id_materia FK, nota_final)</code>. La <code>nota_final</code> es atributo propio de la intermedia (no del alumno ni de la materia).</p>
+    </details>
+  </div>
+  <div class="q">
+    <p><b>c) <span class="tag final">final</span></b> "Un pedido puede incluir uno o más productos y cada producto aparece en muchos pedidos; de cada producto en el pedido se guarda la cantidad." Modelalo completo.</p>
+    <details class="sol"><summary>Ver respuesta</summary>
+<pre><code>PEDIDOS   (id_pedido PK, fecha, id_cliente FK)
+PRODUCTOS (id_producto PK, nombre, precio)
+DETALLE_PEDIDO (id_detalle PK, id_pedido FK,
+                id_producto FK, cantidad)</code></pre>
+      <p>"uno o más productos" + "muchos pedidos" = N:M → intermedia <code>DETALLE_PEDIDO</code> con <code>cantidad</code> propia.</p>
+    </details>
+  </div>
+  <a class="top" href="#top">↑ índice</a>
+</section>
+
+<!-- RELACIONAL -->
+<section id="relacional">
+  <h2 class="sec">5 · Pasaje DER → Modelo Relacional</h2>
+  <p>Reglas mecánicas para convertir el diagrama en tablas:</p>
+  <ul>
+    <li><b>Cada entidad</b> → una <b>tabla</b>. Sus atributos → columnas. Su identificador → <b>PK</b>.</li>
+    <li><b>Relación 1:N</b> → se agrega la <b>FK del lado 1 en la tabla del lado N</b> (no se crea tabla nueva).</li>
+    <li><b>Relación N:M</b> → se crea una <b>tabla intermedia nueva</b> con las 2 FK (+ sus atributos).</li>
+    <li><b>Relación 1:1</b> → FK en cualquiera de las dos (elegí la que tenga sentido).</li>
+  </ul>
+  <p>Notación al escribir la estructura (así queda claro y prolijo):</p>
+<pre><code>TABLA (PK, atributo, atributo, FK <span class="cm">-> tabla_referenciada</span>)</code></pre>
+  <div class="box tip"><b>Tip de examen:</b> si el profe pide "estructura de base de datos", cada tabla tiene que tener su <b>PK</b> marcada y sus <b>FK</b> indicadas. Podés agregar el <b>tipo de dato</b> (INT, VARCHAR, DATE, DECIMAL) para sumar.</div>
+  <a class="top" href="#top">↑ índice</a>
+</section>
+
+<!-- NORMALIZACION -->
+<section id="norm">
+  <h2 class="sec">6 · Normalización</h2>
+  <p>Es el proceso de <b>organizar las tablas para eliminar redundancia</b> y evitar anomalías al insertar, modificar o borrar. Se avanza por <b>formas normales</b>, cada una exige cumplir la anterior.</p>
+
+  <h3>Primera Forma Normal (1FN)</h3>
+  <ul>
+    <li>Todos los atributos son <b>atómicos</b> (un solo valor por celda, nada de "listas" en un campo).</li>
+    <li>No hay <b>grupos repetidos</b> (ej. tel1, tel2, tel3 → mal).</li>
+    <li>Cada tabla tiene <b>PK</b>.</li>
+  </ul>
+  <div class="box bad"><b>Mal (viola 1FN):</b> <code>CLIENTE(id, nombre, telefonos="221-555, 223-777")</code> → dos teléfonos en una celda.<br>
+  <b>Bien:</b> tabla aparte <code>TELEFONOS(id, id_cliente FK, numero)</code>.</div>
+
+  <h3>Segunda Forma Normal (2FN)</h3>
+  <ul>
+    <li>Está en 1FN <b>y</b> todos los atributos no clave dependen de <b>toda</b> la PK, no de una parte.</li>
+    <li>Solo es riesgo cuando la <b>PK es compuesta</b> (dos o más columnas).</li>
+  </ul>
+  <div class="box bad"><b>Mal:</b> <code>DETALLE(id_venta, id_producto, cantidad, <u>nombre_producto</u>)</code> → <code>nombre_producto</code> depende solo de <code>id_producto</code> (parte de la clave), no de toda la PK.<br>
+  <b>Bien:</b> mover <code>nombre_producto</code> a la tabla PRODUCTOS.</div>
+
+  <h3>Tercera Forma Normal (3FN)</h3>
+  <ul>
+    <li>Está en 2FN <b>y</b> no hay <b>dependencias transitivas</b>: ningún atributo no clave depende de otro atributo no clave.</li>
+  </ul>
+  <div class="box bad"><b>Mal:</b> <code>PRODUCTO(id_producto, nombre, id_categoria, <u>nombre_categoria</u>)</code> → <code>nombre_categoria</code> depende de <code>id_categoria</code>, no de la PK del producto.<br>
+  <b>Bien:</b> <code>nombre_categoria</code> va en la tabla CATEGORIAS.</div>
+
+  <div class="box tip"><b>Frase para recordar (3FN):</b> "cada atributo depende de <b>la clave, toda la clave, y nada más que la clave</b>."</div>
+  <a class="top" href="#top">↑ índice</a>
+</section>
+
+<!-- INTEGRIDAD -->
+<section id="integridad">
+  <h2 class="sec">7 · Integridad referencial y restricciones</h2>
+  <p>La cátedra toma preguntas de <b>CREATE TABLE</b> con restricciones y "¿qué pasa si ejecuto...?". Repasá esto.</p>
+
+  <h3>Restricciones (constraints)</h3>
+  <ul>
+    <li><b>PRIMARY KEY:</b> identifica única cada fila, no admite NULL ni repetidos.</li>
+    <li><b>FOREIGN KEY:</b> obliga a que el valor exista en la tabla referenciada (integridad referencial).</li>
+    <li><b>NOT NULL:</b> el campo no puede quedar vacío.</li>
+    <li><b>UNIQUE:</b> no se puede repetir el valor (pero sí admite NULL).</li>
+    <li><b>CHECK:</b> condición que debe cumplir el dato (ej. <code>CHECK (stock &gt; 0)</code>).</li>
+    <li><b>AUTO_INCREMENT:</b> genera el número solo, sirve para PK.</li>
+  </ul>
+
+<pre><code><span class="kw">CREATE TABLE</span> productos (
+  id_producto <span class="fn">INT AUTO_INCREMENT</span>,
+  nombre <span class="fn">VARCHAR</span>(50) <span class="kw">NOT NULL</span>,
+  precio <span class="fn">FLOAT NOT NULL</span>,
+  id_categoria <span class="fn">INT</span>,
+  <span class="kw">CONSTRAINT</span> pk_productos <span class="kw">PRIMARY KEY</span> (id_producto),
+  <span class="kw">CONSTRAINT</span> fk_categoria <span class="kw">FOREIGN KEY</span> (id_categoria)
+     <span class="kw">REFERENCES</span> categorias(id_categoria) <span class="kw">ON DELETE</span> NO ACTION
+);</code></pre>
+
+  <h3>Acciones al borrar/actualizar el padre (ON DELETE)</h3>
+  <table>
+    <tr><th>Acción</th><th>Qué hace al borrar el registro "padre"</th></tr>
+    <tr><td><b>NO ACTION / RESTRICT</b></td><td>No deja borrar si hay hijos que lo referencian (error).</td></tr>
+    <tr><td><b>CASCADE</b></td><td>Borra también los hijos automáticamente (efecto dominó).</td></tr>
+    <tr><td><b>SET NULL</b></td><td>Pone la FK de los hijos en NULL.</td></tr>
+  </table>
+  <div class="box tip"><b>Pregunta típica:</b> "Si borro un producto y la FK en STOCK tiene <code>ON DELETE CASCADE</code>, ¿qué pasa?" → se borra el producto <b>y</b> todos sus registros en STOCK.</div>
+  <a class="top" href="#top">↑ índice</a>
+</section>
+
+<!-- SELECT -->
+<section id="select">
+  <h2 class="sec">8 · SELECT, WHERE, ORDER BY</h2>
+  <p>Estructura básica de una consulta (DQL):</p>
+<pre><code><span class="kw">SELECT</span> columnas
+<span class="kw">FROM</span> tabla
+<span class="kw">WHERE</span> condicion
+<span class="kw">ORDER BY</span> columna [ASC | DESC];</code></pre>
+
+  <h4>Operadores útiles en el WHERE</h4>
+  <div>
+    <span class="pill"><code>=  &lt;&gt;  &gt;  &lt;  &gt;=  &lt;=</code></span>
+    <span class="pill"><code>AND / OR / NOT</code></span>
+    <span class="pill"><code>BETWEEN a AND b</code></span>
+    <span class="pill"><code>IN (v1, v2)</code></span>
+    <span class="pill"><code>LIKE '%texto%'</code></span>
+    <span class="pill"><code>IS NULL / IS NOT NULL</code></span>
+  </div>
+
+  <div class="box tip"><b>Fechas:</b> se comparan como texto con formato <code>'AAAA-MM-DD'</code>. <code>YEAR(fecha)</code>, <code>MONTH(fecha)</code>, <code>DAY(fecha)</code> extraen partes. <code>CURDATE()</code> = hoy. <code>BETWEEN '2024-01-01' AND '2024-06-30'</code> para un rango.</div>
+
+  <h3>Ejercicios</h3>
+  <div class="q">
+    <p><span class="tag facil">fácil</span> Listar nombre y precio de los productos con precio mayor a 800.</p>
+    <details class="sol"><summary>Ver solución</summary>
+<pre><code><span class="kw">SELECT</span> nombre, precio <span class="kw">FROM</span> productos
+<span class="kw">WHERE</span> precio &gt; 800;</code></pre></details>
+  </div>
+  <div class="q">
+    <p><span class="tag facil">fácil</span> Clientes de 'Mar del Plata', ordenados por nombre.</p>
+    <details class="sol"><summary>Ver solución</summary>
+<pre><code><span class="kw">SELECT</span> * <span class="kw">FROM</span> clientes
+<span class="kw">WHERE</span> ciudad = <span class="st">'Mar del Plata'</span>
+<span class="kw">ORDER BY</span> nombre;</code></pre></details>
+  </div>
+  <div class="q">
+    <p><span class="tag media">media</span> Productos con precio entre 600 y 1200, de la categoría 1, ordenados de mayor a menor precio.</p>
+    <details class="sol"><summary>Ver solución</summary>
+<pre><code><span class="kw">SELECT</span> nombre, precio <span class="kw">FROM</span> productos
+<span class="kw">WHERE</span> precio <span class="kw">BETWEEN</span> 600 <span class="kw">AND</span> 1200
+  <span class="kw">AND</span> id_categoria = 1
+<span class="kw">ORDER BY</span> precio <span class="kw">DESC</span>;</code></pre></details>
+  </div>
+  <div class="q">
+    <p><span class="tag media">media</span> Clientes que NO tienen email cargado.</p>
+    <details class="sol"><summary>Ver solución</summary>
+<pre><code><span class="kw">SELECT</span> * <span class="kw">FROM</span> clientes
+<span class="kw">WHERE</span> email <span class="kw">IS NULL</span>;</code></pre>
+    <p class="muted">Ojo: <code>= NULL</code> NO funciona, siempre <code>IS NULL</code>.</p></details>
+  </div>
+  <a class="top" href="#top">↑ índice</a>
+</section>
+
+<!-- GROUP BY -->
+<section id="group">
+  <h2 class="sec">9 · GROUP BY, HAVING y funciones de agregado</h2>
+  <p><b>GROUP BY</b> agrupa filas que comparten un valor, para aplicarles una <b>función de agregado</b> por grupo.</p>
+
+  <h4>Funciones de agregado</h4>
+  <div>
+    <span class="pill"><code>COUNT(*)</code> cantidad</span>
+    <span class="pill"><code>SUM(col)</code> suma</span>
+    <span class="pill"><code>AVG(col)</code> promedio</span>
+    <span class="pill"><code>MAX(col)</code> mayor</span>
+    <span class="pill"><code>MIN(col)</code> menor</span>
+  </div>
+
+<pre><code><span class="kw">SELECT</span> columna_grupo, <span class="fn">FUNCION</span>(col)
+<span class="kw">FROM</span> tabla
+<span class="kw">WHERE</span>   <span class="cm">-- filtra filas ANTES de agrupar</span>
+<span class="kw">GROUP BY</span> columna_grupo
+<span class="kw">HAVING</span>  <span class="cm">-- filtra GRUPOS ya formados (usa agregados)</span>
+<span class="kw">ORDER BY</span> ...;</code></pre>
+
+  <div class="box warn">
+    <b>⚠️ WHERE vs HAVING — la diferencia que toman siempre:</b><br>
+    • <b>WHERE</b> filtra <b>filas individuales</b>, <b>antes</b> de agrupar. No puede usar <code>SUM</code>, <code>COUNT</code>, etc.<br>
+    • <b>HAVING</b> filtra <b>grupos</b>, <b>después</b> de agrupar. Sí puede usar funciones de agregado.<br>
+    <i>"Mostrame las categorías con más de 5 productos"</i> → eso es un <code>HAVING COUNT(*) &gt; 5</code>.
+  </div>
+
+  <div class="box tip">
+    <b>Regla del SELECT:</b> toda columna del SELECT que <b>no</b> esté dentro de una función de agregado <b>debe</b> estar en el GROUP BY.
+  </div>
+
+  <div class="box ok">
+    <b>Orden de ejecución real (no el de escritura):</b><br>
+    <code>FROM → WHERE → GROUP BY → HAVING → SELECT → ORDER BY → LIMIT</code>
+  </div>
+
+  <h3>Ejercicios</h3>
+  <div class="q">
+    <p><span class="tag facil">fácil</span> ¿Cuántos productos hay en total?</p>
+    <details class="sol"><summary>Ver solución</summary>
+<pre><code><span class="kw">SELECT</span> <span class="fn">COUNT</span>(*) <span class="kw">FROM</span> productos;</code></pre></details>
+  </div>
+  <div class="q">
+    <p><span class="tag media">media</span> Cantidad de productos por categoría.</p>
+    <details class="sol"><summary>Ver solución</summary>
+<pre><code><span class="kw">SELECT</span> id_categoria, <span class="fn">COUNT</span>(*) <span class="kw">AS</span> cantidad
+<span class="kw">FROM</span> productos
+<span class="kw">GROUP BY</span> id_categoria;</code></pre></details>
+  </div>
+  <div class="q">
+    <p><span class="tag media">media</span> Precio promedio de productos por categoría, pero solo contando productos con stock mayor a 0.</p>
+    <details class="sol"><summary>Ver solución</summary>
+<pre><code><span class="kw">SELECT</span> id_categoria, <span class="fn">AVG</span>(precio) <span class="kw">AS</span> precio_prom
+<span class="kw">FROM</span> productos
+<span class="kw">WHERE</span> stock &gt; 0
+<span class="kw">GROUP BY</span> id_categoria;</code></pre>
+    <p class="muted">El filtro de stock es por fila → va en WHERE.</p></details>
+  </div>
+  <div class="q">
+    <p><span class="tag dificil">difícil</span> Categorías que tienen <b>más de 1 producto</b>.</p>
+    <details class="sol"><summary>Ver solución</summary>
+<pre><code><span class="kw">SELECT</span> id_categoria, <span class="fn">COUNT</span>(*) <span class="kw">AS</span> cantidad
+<span class="kw">FROM</span> productos
+<span class="kw">GROUP BY</span> id_categoria
+<span class="kw">HAVING</span> <span class="fn">COUNT</span>(*) &gt; 1;</code></pre>
+    <p class="muted">"Grupos con más de 1" → condición sobre el COUNT → HAVING.</p></details>
+  </div>
+  <div class="q">
+    <p><span class="tag final">final</span> Por cada venta, mostrar el id_venta y el <b>total facturado</b> (cantidad × precio_unitario sumado), solo de las ventas cuyo total supere 2000.</p>
+    <details class="sol"><summary>Ver solución</summary>
+<pre><code><span class="kw">SELECT</span> id_venta, <span class="fn">SUM</span>(cantidad * precio_unitario) <span class="kw">AS</span> total
+<span class="kw">FROM</span> detalle_venta
+<span class="kw">GROUP BY</span> id_venta
+<span class="kw">HAVING</span> <span class="fn">SUM</span>(cantidad * precio_unitario) &gt; 2000;</code></pre></details>
+  </div>
+  <a class="top" href="#top">↑ índice</a>
+</section>
+
+<!-- JOINS -->
+<section id="joins">
+  <h2 class="sec">10 · JOINs (apareamiento de tablas)</h2>
+  <p>Un <b>JOIN</b> combina filas de dos o más tablas relacionadas por su <b>PK–FK</b>. Se usa cuando necesitás datos que están en tablas distintas (ej. el <i>nombre</i> del cliente que está en CLIENTES, junto con la <i>fecha</i> de la venta que está en VENTAS).</p>
+
+  <table>
+    <tr><th>Tipo</th><th>Qué devuelve</th><th>Cuándo</th></tr>
+    <tr><td><b>INNER JOIN</b></td><td>Solo las filas con coincidencia en <b>ambas</b> tablas.</td><td>El más común. "Clientes que tienen ventas".</td></tr>
+    <tr><td><b>LEFT JOIN</b></td><td><b>Todo</b> lo de la tabla izquierda + lo que coincida de la derecha (NULL si no hay).</td><td>"Todos los clientes, tengan o no ventas".</td></tr>
+    <tr><td><b>RIGHT JOIN</b></td><td>Todo lo de la derecha + lo que coincida de la izquierda.</td><td>"Todas las ventas, tengan o no cliente".</td></tr>
+  </table>
+
+  <h4>Sintaxis (con alias, recomendado)</h4>
+<pre><code><span class="kw">SELECT</span> c.nombre, v.fecha
+<span class="kw">FROM</span> clientes c
+<span class="kw">INNER JOIN</span> ventas v <span class="kw">ON</span> c.id_cliente = v.id_cliente;</code></pre>
+
+  <div class="box tip">
+    <b>La clave de todo JOIN es el <code>ON</code>:</b> ahí decís por qué campos se relacionan las tablas (siempre PK = FK). Si te olvidás el <code>ON</code>, se arma un <b>producto cartesiano</b> (todas las filas contra todas — error).
+  </div>
+
+  <h3>Ejercicios</h3>
+  <div class="q">
+    <p><span class="tag facil">fácil</span> Mostrar el nombre de cada producto junto al nombre de su categoría.</p>
+    <details class="sol"><summary>Ver solución</summary>
+<pre><code><span class="kw">SELECT</span> p.nombre, cat.nombre <span class="kw">AS</span> categoria
+<span class="kw">FROM</span> productos p
+<span class="kw">INNER JOIN</span> categorias cat <span class="kw">ON</span> p.id_categoria = cat.id_categoria;</code></pre></details>
+  </div>
+  <div class="q">
+    <p><span class="tag media">media</span> Mostrar cada venta con el nombre y la ciudad del cliente que la hizo.</p>
+    <details class="sol"><summary>Ver solución</summary>
+<pre><code><span class="kw">SELECT</span> v.id_venta, v.fecha, c.nombre, c.ciudad
+<span class="kw">FROM</span> ventas v
+<span class="kw">INNER JOIN</span> clientes c <span class="kw">ON</span> v.id_cliente = c.id_cliente;</code></pre></details>
+  </div>
+  <div class="q">
+    <p><span class="tag media">media</span> Mostrar <b>todos</b> los clientes y, si tienen, sus ventas (los que no tienen, igual aparecen).</p>
+    <details class="sol"><summary>Ver solución</summary>
+<pre><code><span class="kw">SELECT</span> c.nombre, v.id_venta
+<span class="kw">FROM</span> clientes c
+<span class="kw">LEFT JOIN</span> ventas v <span class="kw">ON</span> c.id_cliente = v.id_cliente;</code></pre>
+    <p class="muted">LEFT JOIN → aparece Caro aunque no tenga ventas (id_venta = NULL).</p></details>
+  </div>
+  <div class="q">
+    <p><span class="tag dificil">difícil</span> Total facturado por cada cliente (nombre + suma de cantidad×precio de sus detalles). <i>Une 3 tablas + GROUP BY.</i></p>
+    <details class="sol"><summary>Ver solución</summary>
+<pre><code><span class="kw">SELECT</span> c.nombre, <span class="fn">SUM</span>(d.cantidad * d.precio_unitario) <span class="kw">AS</span> total
+<span class="kw">FROM</span> clientes c
+<span class="kw">INNER JOIN</span> ventas v <span class="kw">ON</span> c.id_cliente = v.id_cliente
+<span class="kw">INNER JOIN</span> detalle_venta d <span class="kw">ON</span> v.id_venta = d.id_venta
+<span class="kw">GROUP BY</span> c.nombre;</code></pre></details>
+  </div>
+  <div class="q">
+    <p><span class="tag final">final</span> Nombre de cada producto y la <b>cantidad total vendida</b> de cada uno, ordenado de más vendido a menos.</p>
+    <details class="sol"><summary>Ver solución</summary>
+<pre><code><span class="kw">SELECT</span> p.nombre, <span class="fn">SUM</span>(d.cantidad) <span class="kw">AS</span> total_vendido
+<span class="kw">FROM</span> productos p
+<span class="kw">INNER JOIN</span> detalle_venta d <span class="kw">ON</span> p.id_producto = d.id_producto
+<span class="kw">GROUP BY</span> p.nombre
+<span class="kw">ORDER BY</span> total_vendido <span class="kw">DESC</span>;</code></pre></details>
+  </div>
+  <a class="top" href="#top">↑ índice</a>
+</section>
+
+<!-- SUBCONSULTAS -->
+<section id="sub">
+  <h2 class="sec">11 · Subconsultas <span class="tag final">bloque 2 del final (SIN JOIN)</span></h2>
+  <p>Una subconsulta es <b>una consulta dentro de otra</b>. La de adentro se ejecuta primero y su resultado lo usa la de afuera. Va siempre <b>entre paréntesis</b>.</p>
+
+  <div class="box ok">
+    <b>🔑 La regla del <code>=</code> vs <code>IN</code>:</b><br>
+    • Si la subconsulta devuelve <b>UN solo valor</b> → <code>=</code> (o <code>&gt;</code>, <code>&lt;</code>).<br>
+    • Si puede devolver <b>varias filas</b> → <code>IN</code>.<br>
+    Usar <code>=</code> con una subconsulta que devuelve varias filas = <b>error</b>. Ante la duda, <code>IN</code> es más seguro.
+  </div>
+
+  <h3>Tipo 1 — devuelve un valor (con agregado)</h3>
+  <div class="q">
+    <p><span class="tag facil">fácil</span> Productos más caros que el precio promedio.</p>
+    <details class="sol"><summary>Ver solución</summary>
+<pre><code><span class="kw">SELECT</span> nombre, precio <span class="kw">FROM</span> productos
+<span class="kw">WHERE</span> precio &gt; (<span class="kw">SELECT</span> <span class="fn">AVG</span>(precio) <span class="kw">FROM</span> productos);</code></pre></details>
+  </div>
+  <div class="q">
+    <p><span class="tag media">media</span> Todos los datos del producto <b>más caro</b>.</p>
+    <details class="sol"><summary>Ver solución</summary>
+<pre><code><span class="kw">SELECT</span> * <span class="kw">FROM</span> productos
+<span class="kw">WHERE</span> precio = (<span class="kw">SELECT</span> <span class="fn">MAX</span>(precio) <span class="kw">FROM</span> productos);</code></pre>
+    <p class="muted">Compará <b>columna con columna</b>: precio = MAX(precio). No mezcles id con precio.</p></details>
+  </div>
+
+  <h3>Tipo 2 — devuelve una lista (con IN)</h3>
+  <div class="q">
+    <p><span class="tag media">media</span> Nombres de los productos de la categoría 'Bebidas' (sin JOIN).</p>
+    <details class="sol"><summary>Ver solución</summary>
+<pre><code><span class="kw">SELECT</span> nombre <span class="kw">FROM</span> productos
+<span class="kw">WHERE</span> id_categoria <span class="kw">IN</span> (
+   <span class="kw">SELECT</span> id_categoria <span class="kw">FROM</span> categorias
+   <span class="kw">WHERE</span> nombre = <span class="st">'Bebidas'</span>);</code></pre>
+    <p class="muted">La subconsulta necesita su propio <code>FROM</code>.</p></details>
+  </div>
+
+  <h3>Tipo 3 — anidadas (subconsulta dentro de subconsulta)</h3>
+  <div class="q">
+    <p><span class="tag dificil">difícil</span> Datos del cliente que hizo la venta con id más alto (pensalo en capas).</p>
+    <details class="sol"><summary>Ver solución</summary>
+<pre><code><span class="kw">SELECT</span> * <span class="kw">FROM</span> clientes
+<span class="kw">WHERE</span> id_cliente <span class="kw">IN</span> (
+   <span class="kw">SELECT</span> id_cliente <span class="kw">FROM</span> ventas
+   <span class="kw">WHERE</span> id_venta = (<span class="kw">SELECT</span> <span class="fn">MAX</span>(id_venta) <span class="kw">FROM</span> ventas)
+);</code></pre>
+    <p class="muted">Como muñecas rusas: cada <code>(...)</code> se resuelve primero y le pasa el valor a la de afuera.</p></details>
+  </div>
+  <div class="q">
+    <p><span class="tag final">final</span> Nombre de los productos vendidos en la venta de id 1 (atravesando la tabla intermedia, sin JOIN).</p>
+    <details class="sol"><summary>Ver solución</summary>
+<pre><code><span class="kw">SELECT</span> nombre <span class="kw">FROM</span> productos
+<span class="kw">WHERE</span> id_producto <span class="kw">IN</span> (
+   <span class="kw">SELECT</span> id_producto <span class="kw">FROM</span> detalle_venta
+   <span class="kw">WHERE</span> id_venta = 1);</code></pre></details>
+  </div>
+
+  <h3>Tipo 4 — correlacionada (con COUNT / SUM por fila)</h3>
+  <p>La subconsulta "mira" un dato de la consulta de afuera. Sirve para "¿cuántos X tiene cada Y?".</p>
+  <div class="q">
+    <p><span class="tag final">final</span> Categorías que tienen exactamente 2 productos (sin JOIN).</p>
+    <details class="sol"><summary>Ver solución</summary>
+<pre><code><span class="kw">SELECT</span> * <span class="kw">FROM</span> categorias c
+<span class="kw">WHERE</span> (<span class="kw">SELECT</span> <span class="fn">COUNT</span>(*) <span class="kw">FROM</span> productos p
+       <span class="kw">WHERE</span> p.id_categoria = c.id_categoria) = 2;</code></pre>
+    <p class="muted">La línea <code>p.id_categoria = c.id_categoria</code> conecta adentro con afuera.</p></details>
+  </div>
+  <div class="q">
+    <p><span class="tag final">final</span> Clientes cuyo total de ventas (cantidad de ventas) sea mayor a 1.</p>
+    <details class="sol"><summary>Ver solución</summary>
+<pre><code><span class="kw">SELECT</span> * <span class="kw">FROM</span> clientes cl
+<span class="kw">WHERE</span> (<span class="kw">SELECT</span> <span class="fn">COUNT</span>(*) <span class="kw">FROM</span> ventas v
+       <span class="kw">WHERE</span> v.id_cliente = cl.id_cliente) &gt; 1;</code></pre></details>
+  </div>
+
+  <div class="box warn"><b>⚠️ No olvides la comparación final:</b> toda subconsulta en un <code>WHERE</code> termina en un operador (<code>=</code>, <code>&gt;</code>, <code>IN</code>...). Si escribís <code>WHERE (SELECT ...)</code> y ahí corta, falta el <code>&gt; 1</code> o lo que sea.</div>
+  <a class="top" href="#top">↑ índice</a>
+</section>
+
+<!-- SP -->
+<section id="sp">
+  <h2 class="sec">12 · Procedimientos almacenados <span class="tag final">bloque 3 (se puede JOIN)</span></h2>
+  <p>Un SP es un bloque de código SQL guardado en la BD, que se ejecuta con <code>CALL</code> y puede recibir <b>parámetros</b>.</p>
+
+  <h4>Esqueleto base — memorizalo</h4>
+<pre><code><span class="kw">DELIMITER</span> $$
+
+<span class="kw">CREATE PROCEDURE</span> nombre_sp(<span class="kw">IN</span> p_param <span class="fn">INT</span>)
+<span class="kw">BEGIN</span>
+   <span class="cm">-- cuerpo</span>
+<span class="kw">END</span> $$
+
+<span class="kw">DELIMITER</span> ;
+
+<span class="kw">CALL</span> nombre_sp(5);</code></pre>
+
+  <div class="box tip"><b>Piezas clave:</b> <code>DELIMITER $$</code> (cambia el fin de línea para poder usar <code>;</code> adentro), <code>BEGIN ... END</code> (el cuerpo), parámetros con <code>IN</code>, y al final <code>DELIMITER ;</code> para volver a la normalidad.</div>
+
+  <h4>Los 3 patrones básicos</h4>
+<pre><code><span class="cm">-- UPDATE con filtro</span>
+<span class="kw">UPDATE</span> tabla <span class="kw">SET</span> col = valor <span class="kw">WHERE</span> id = p_id;
+
+<span class="cm">-- INSERT (siempre listá las columnas)</span>
+<span class="kw">INSERT INTO</span> tabla (c1, c2) <span class="kw">VALUES</span> (p_1, p_2);
+
+<span class="cm">-- SELECT calculado (con AS, nunca con =)</span>
+<span class="kw">SELECT</span> monto, monto * p_porc/100 <span class="kw">AS</span> comision
+<span class="kw">FROM</span> ventas <span class="kw">WHERE</span> id_venta = p_id;</code></pre>
+
+  <div class="box warn"><b>⚠️ <code>=</code> es de UPDATE, <code>AS</code> es de SELECT.</b> En un SELECT, para nombrar un cálculo se usa <code>expresión AS alias</code>, nunca <code>columna = valor</code>. El <code>col = valor</code> es solo del <code>SET</code> del UPDATE.</div>
+
+  <h4>Variables e IF</h4>
+<pre><code><span class="kw">DECLARE</span> v_x <span class="fn">INT</span>;                    <span class="cm">-- al inicio del BEGIN</span>
+<span class="kw">SELECT</span> col <span class="kw">INTO</span> v_x <span class="kw">FROM</span> ... ;      <span class="cm">-- guarda un valor en la variable</span>
+
+<span class="kw">IF</span> condicion <span class="kw">THEN</span>
+   ...
+<span class="kw">ELSEIF</span> otra_condicion <span class="kw">THEN</span>       <span class="cm">-- ELSEIF junto, y SIEMPRE con condición + THEN</span>
+   ...
+<span class="kw">ELSE</span>
+   ...
+<span class="kw">END IF</span>;</code></pre>
+
+  <h4>Patrón "¿existe?"</h4>
+<pre><code><span class="kw">DECLARE</span> v_cant <span class="fn">INT</span>;
+<span class="kw">SELECT</span> <span class="fn">COUNT</span>(*) <span class="kw">INTO</span> v_cant <span class="kw">FROM</span> productos <span class="kw">WHERE</span> id_producto = p_id;
+<span class="kw">IF</span> v_cant &gt; 0 <span class="kw">THEN</span>
+   <span class="cm">-- existe</span>
+<span class="kw">ELSE</span>
+   <span class="kw">SELECT</span> <span class="st">'No existe'</span> <span class="kw">AS</span> mensaje;
+<span class="kw">END IF</span>;</code></pre>
+
+  <h3>Ejercicios</h3>
+  <div class="q">
+    <p><span class="tag facil">fácil</span> SP <code>buscar_producto(p_id)</code>: devolver todos los datos de ese producto.</p>
+    <details class="sol"><summary>Ver solución</summary>
+<pre><code><span class="kw">DELIMITER</span> $$
+<span class="kw">CREATE PROCEDURE</span> buscar_producto(<span class="kw">IN</span> p_id <span class="fn">INT</span>)
+<span class="kw">BEGIN</span>
+   <span class="kw">SELECT</span> * <span class="kw">FROM</span> productos <span class="kw">WHERE</span> id_producto = p_id;
+<span class="kw">END</span> $$
+<span class="kw">DELIMITER</span> ;</code></pre></details>
+  </div>
+  <div class="q">
+    <p><span class="tag media">media</span> SP <code>aplicar_descuento(p_id, p_porc)</code>: bajar el precio del producto en ese porcentaje.</p>
+    <details class="sol"><summary>Ver solución</summary>
+<pre><code><span class="kw">DELIMITER</span> $$
+<span class="kw">CREATE PROCEDURE</span> aplicar_descuento(<span class="kw">IN</span> p_id <span class="fn">INT</span>, <span class="kw">IN</span> p_porc <span class="fn">DECIMAL</span>(5,2))
+<span class="kw">BEGIN</span>
+   <span class="kw">UPDATE</span> productos
+   <span class="kw">SET</span> precio = precio * (1 - p_porc/100)
+   <span class="kw">WHERE</span> id_producto = p_id;
+<span class="kw">END</span> $$
+<span class="kw">DELIMITER</span> ;</code></pre>
+    <p class="muted">Porcentaje = valor * (1 ± porc/100). Descuento resta, aumento suma.</p></details>
+  </div>
+  <div class="q">
+    <p><span class="tag dificil">difícil</span> SP <code>clasificar_stock(p_id)</code>: si stock &gt; 30 mostrar 'Stock alto', si no 'Stock bajo'.</p>
+    <details class="sol"><summary>Ver solución</summary>
+<pre><code><span class="kw">DELIMITER</span> $$
+<span class="kw">CREATE PROCEDURE</span> clasificar_stock(<span class="kw">IN</span> p_id <span class="fn">INT</span>)
+<span class="kw">BEGIN</span>
+   <span class="kw">DECLARE</span> v_stock <span class="fn">INT</span>;
+   <span class="kw">SELECT</span> stock <span class="kw">INTO</span> v_stock <span class="kw">FROM</span> productos <span class="kw">WHERE</span> id_producto = p_id;
+   <span class="kw">IF</span> v_stock &gt; 30 <span class="kw">THEN</span>
+      <span class="kw">SELECT</span> <span class="st">'Stock alto'</span> <span class="kw">AS</span> mensaje;
+   <span class="kw">ELSE</span>
+      <span class="kw">SELECT</span> <span class="st">'Stock bajo'</span> <span class="kw">AS</span> mensaje;
+   <span class="kw">END IF</span>;
+<span class="kw">END</span> $$
+<span class="kw">DELIMITER</span> ;</code></pre></details>
+  </div>
+  <div class="q">
+    <p><span class="tag final">final</span> SP <code>actualizar_precio(p_id, p_nuevo)</code>: si el producto existe, actualizar su precio; si el nuevo precio es mayor al viejo poner categoría en la 1, si es menor en la 2, si es igual no tocar la categoría. Si no existe, avisar. <i>(Patrón completo: existencia + guardar valor viejo + IF/ELSEIF/ELSE.)</i></p>
+    <details class="sol"><summary>Ver solución</summary>
+<pre><code><span class="kw">DELIMITER</span> $$
+<span class="kw">CREATE PROCEDURE</span> actualizar_precio(<span class="kw">IN</span> p_id <span class="fn">INT</span>, <span class="kw">IN</span> p_nuevo <span class="fn">DECIMAL</span>(10,2))
+<span class="kw">BEGIN</span>
+   <span class="kw">DECLARE</span> v_cant <span class="fn">INT</span>;
+   <span class="kw">DECLARE</span> v_viejo <span class="fn">DECIMAL</span>(10,2);
+
+   <span class="kw">SELECT</span> <span class="fn">COUNT</span>(*) <span class="kw">INTO</span> v_cant <span class="kw">FROM</span> productos <span class="kw">WHERE</span> id_producto = p_id;
+
+   <span class="kw">IF</span> v_cant &gt; 0 <span class="kw">THEN</span>
+      <span class="kw">SELECT</span> precio <span class="kw">INTO</span> v_viejo <span class="kw">FROM</span> productos <span class="kw">WHERE</span> id_producto = p_id;
+
+      <span class="kw">IF</span> p_nuevo &gt; v_viejo <span class="kw">THEN</span>
+         <span class="kw">UPDATE</span> productos <span class="kw">SET</span> precio = p_nuevo, id_categoria = 1 <span class="kw">WHERE</span> id_producto = p_id;
+      <span class="kw">ELSEIF</span> p_nuevo &lt; v_viejo <span class="kw">THEN</span>
+         <span class="kw">UPDATE</span> productos <span class="kw">SET</span> precio = p_nuevo, id_categoria = 2 <span class="kw">WHERE</span> id_producto = p_id;
+      <span class="kw">ELSE</span>
+         <span class="kw">UPDATE</span> productos <span class="kw">SET</span> precio = p_nuevo <span class="kw">WHERE</span> id_producto = p_id;
+      <span class="kw">END IF</span>;
+   <span class="kw">ELSE</span>
+      <span class="kw">SELECT</span> <span class="st">'El producto no existe'</span> <span class="kw">AS</span> mensaje;
+   <span class="kw">END IF</span>;
+<span class="kw">END</span> $$
+<span class="kw">DELIMITER</span> ;</code></pre>
+    <p class="muted">Clave: guardá el valor <b>viejo</b> ANTES del UPDATE, y no te olvides de actualizar también el dato pedido (el precio), no solo la categoría.</p></details>
+  </div>
+  <a class="top" href="#top">↑ índice</a>
+</section>
+
+<!-- ERRORES -->
+<section id="errores">
+  <h2 class="sec">13 · Errores típicos a evitar 🚨</h2>
+  <p>Estos son los que aparecieron practicando — si los esquivás, subís la nota:</p>
+  <table>
+    <tr><th>Error</th><th>Correcto</th></tr>
+    <tr><td>FK del lado del "uno" en 1:N</td><td>FK va del lado del "muchos"</td></tr>
+    <tr><td>Meter FK suelta en una relación N:M</td><td>N:M → tabla intermedia</td></tr>
+    <tr><td><code>= </code>con subconsulta de varias filas</td><td>usar <code>IN</code></td></tr>
+    <tr><td>Comparar id con precio (<code>id = MAX(precio)</code>)</td><td>columna con columna (<code>precio = MAX(precio)</code>)</td></tr>
+    <tr><td>Subconsulta en el FROM interno sin <code>FROM</code></td><td>toda subconsulta lleva su <code>FROM</code></td></tr>
+    <tr><td>Subconsulta sin comparación final</td><td>terminar en <code>= / &gt; / IN</code></td></tr>
+    <tr><td><code>SELECT col = valor</code> (mezclar con UPDATE)</td><td><code>SELECT expr AS alias</code></td></tr>
+    <tr><td><code>UPDATE ... FROM ...</code></td><td><code>UPDATE tabla SET col=valor WHERE</code> (sin FROM)</td></tr>
+    <tr><td>INSERT sin listar columnas (choca con la PK auto)</td><td><code>INSERT INTO t (c1,c2) VALUES (...)</code></td></tr>
+    <tr><td><code>ELSEIF</code> sin condición</td><td><code>ELSEIF cond THEN</code></td></tr>
+    <tr><td>Olvidar actualizar el dato pedido (solo la categoría)</td><td>actualizar todo lo que pide la consigna</td></tr>
+    <tr><td>WHERE con función de agregado</td><td>eso va en <code>HAVING</code></td></tr>
+    <tr><td>Olvidar el <code>ON</code> en un JOIN</td><td>siempre <code>ON t1.pk = t2.fk</code></td></tr>
+    <tr><td>Nombre de PK inventado</td><td>usar el nombre <b>tal cual</b> del enunciado</td></tr>
+  </table>
+  <a class="top" href="#top">↑ índice</a>
+</section>
+
+<!-- CHECKLIST -->
+<section id="checklist">
+  <h2 class="sec">14 · Checklist antes de entregar ✅</h2>
+  <ul>
+    <li>✔️ <b>DER:</b> ¿cada entidad tiene PK? ¿cada 1:N tiene su FK del lado correcto? ¿cada N:M tiene su tabla intermedia?</li>
+    <li>✔️ ¿Modelaste <b>todos</b> los datos del enunciado? (releé buscando datos sueltos).</li>
+    <li>✔️ <b>Subconsultas:</b> sin JOIN, cada una con su <code>FROM</code>, comparando columna con columna, terminando en un operador.</li>
+    <li>✔️ <b>SP:</b> <code>DELIMITER</code>, <code>BEGIN/END</code>, <code>DECLARE</code> arriba, <code>IF ... END IF;</code>, y actualizás lo que la consigna pide.</li>
+    <li>✔️ Nombres de tablas/columnas <b>tal cual</b> el enunciado.</li>
+    <li>✔️ Letra legible, nombre en todas las hojas, hojas numeradas.</li>
+    <li>✔️ Si dudás de una interpretación → <b>escribila al lado</b>, la toman en cuenta.</li>
+  </ul>
+  <div class="box ok center big">
+    <b>Vas muy bien preparado. Respirá, leé cada enunciado dos veces, y arrancá por el DER. ¡Éxitos, Agustín! 💪🎯</b>
+  </div>
+  <a class="top" href="#top">↑ índice</a>
+</section>
+
+<p class="center muted" style="margin:30px 0;font-size:.8rem">Resumen de estudio · Base de Datos I · Generado para el final del 08/07</p>
+
+</div>
+</body>
+</html>
