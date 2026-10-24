@@ -149,9 +149,111 @@ from
 	clientes_mdp as cm
 left join
 	ventas_por_cliente as vc
-    on cm.id_cliente = vc.id_cliente
+    on cm.id_cliente = vc.id_cliente;
 -- ==================================================
 
 -- ==================================================
 -- EJERCICIO 7
+with totales_venta as(
+	select
+		d.id_venta,
+        sum(d.cantidad * d.precio_unitario) as importe_total
+	from
+		detalle_ventas as d
+	group by
+		d.id_venta
+),
+totales_cliente as (
+	select
+		v.id_cliente,
+        sum(tv.importe_total) as total_gastado
+	from
+		ventas as v
+	join
+		totales_venta as tv
+        on v.id_venta = tv.id_venta
+	group by
+		v.id_cliente
+)
+
+select
+	c.nombre,
+    tc.total_gastado
+from
+	clientes as c
+join
+	totales_cliente as tc
+    on c.id_cliente = tc.id_cliente
+order by
+	tc.total_gastado desc;
+-- ==================================================
+
+-- ==================================================
+-- EJERCICIO 8
+with totales_cliente as(
+	select
+		sum(d.cantidad * d.precio_unitario) as total_gastado,
+        v.id_cliente
+	from
+		detalle_ventas as d
+	join
+		ventas as v
+        on d.id_venta = v.id_venta
+	group by
+		v.id_cliente
+)
+
+select
+	c.nombre,
+    tc.total_gastado
+from
+	clientes as c
+join
+	totales_cliente as tc
+    on c.id_cliente = tc.id_cliente
+having
+	tc.total_gastado > (
+		select
+			avg(total_gastado)
+		from
+			totales_cliente
+	);
+-- ==================================================
+
+-- ==================================================
+-- EJERCICIO 9
+with resumen_productos as (
+	select
+		count(*) as cantidad_productos,
+        avg(p.precio) as promedio,
+	    p.categoria
+	from
+		productos as p
+	group by
+		p.categoria
+),
+ventas_por_categoria as(
+	select
+		p.categoria,
+        sum(d.cantidad) as total_unidades_vendidas
+	from
+		productos as p
+	join
+		detalle_ventas as d
+        on p.id_producto = d.id_producto
+	group by
+		p.categoria
+)
+select
+	rp.categoria,
+    rp.cantidad_productos,
+    rp.promedio,
+    coalesce(vc.total_unidades_vendidas,0) as total_unidades_vendidas
+from
+	resumen_productos as rp
+left join
+	ventas_por_categoria as vc
+	on rp.categoria = vc.categoria;
+	
+	
 -- ==================================================
