@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TP Adicional · CTE, Vistas y Subconsultas</title>
+<style>
+:root{--bg:#f5f7fb;--surface:#fff;--surface2:#eef3f8;--text:#172033;--muted:#5d687b;--line:#dbe3ee;--primary:#174f78;--primary2:#0f6b69;--accent:#d97706;--code:#132236;--codeText:#eaf2ff;--shadow:0 14px 34px rgba(35,55,80,.09)}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);line-height:1.65}html{scroll-behavior:smooth}
+.institutional-header{background:#fff;border-bottom:1px solid #d8dde5}.institutional-inner{width:min(1500px,calc(100% - 36px));min-height:92px;margin:auto;display:grid;grid-template-columns:auto minmax(250px,1fr) auto;align-items:center;gap:30px;padding:12px 0}.institutional-logo{width:clamp(215px,20vw,305px);height:auto}.institutional-logo-fallback{font-size:2.2rem;font-weight:900;color:var(--primary)}.institutional-kicker{display:block;color:#4e5968;font-size:.72rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase}.institutional-course strong{display:block;font-size:clamp(1.02rem,1.7vw,1.42rem)}.institutional-course span:last-child{display:block;color:#5d6673;font-size:.84rem}.institutional-meta{text-align:right;font-size:.72rem;line-height:1.3;white-space:nowrap}
+.topbar{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.96);border-bottom:1px solid var(--line);backdrop-filter:blur(10px)}.topinner{max-width:1120px;margin:auto;padding:10px 18px;display:flex;justify-content:space-between;align-items:center}.topinner strong{color:var(--primary)}.topinner a{font-size:.84rem;color:var(--muted);text-decoration:none;margin-left:10px}
+.wrap{max-width:1120px;margin:auto;padding:26px 18px 60px}.hero{padding:38px;border-radius:24px;background:linear-gradient(135deg,#123f61,#155d70 58%,#0f6b69);color:#fff;box-shadow:var(--shadow)}.hero .eyebrow{font-size:.78rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase}.hero h1{font-size:clamp(2rem,5vw,3.7rem);line-height:1.04;margin:12px 0}.hero p{max-width:820px;color:rgba(255,255,255,.9);font-size:1.06rem}.hero-meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:20px}.hero-meta span{background:rgba(255,255,255,.12);padding:6px 9px;border-radius:9px;font-size:.8rem}
+.route{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin:20px 0}.route div{background:#fff;border:1px solid var(--line);border-radius:15px;padding:14px}.route b{display:block;color:var(--primary);font-size:.78rem}
+.section{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:28px;margin:26px 0;box-shadow:var(--shadow)}.section-kicker{color:var(--primary2);font-weight:850;font-size:.76rem;letter-spacing:.1em;text-transform:uppercase}h2{margin:.3rem 0 1rem;font-size:clamp(1.5rem,3vw,2.15rem)}h3{margin:.4rem 0 .6rem;font-size:1.15rem}.lead{color:var(--muted)}.callout{background:var(--surface2);border-left:5px solid var(--primary);padding:15px 17px;border-radius:0 12px 12px 0;margin:16px 0}.warning{border-left-color:var(--accent)}
+.exercise{background:#fff;border:1px solid var(--line);border-radius:16px;padding:19px;margin:14px 0;box-shadow:0 7px 18px rgba(35,55,80,.06)}.exercise-head{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:8px}.tag{display:inline-block;background:#e8f2f8;color:var(--primary);padding:4px 8px;border-radius:999px;font-size:.72rem;font-weight:850}.num{font-size:.8rem;color:var(--muted);font-weight:700}
+table{width:100%;border-collapse:collapse;margin-top:15px}th,td{border:1px solid var(--line);padding:10px;text-align:left;vertical-align:top}th{background:var(--surface2);color:var(--primary)}code{font-family:"Cascadia Code",Consolas,monospace}:not(pre)>code{background:var(--surface2);color:var(--primary);padding:.1em .35em;border-radius:5px}pre{background:var(--code);color:var(--codeText);padding:18px;border-radius:14px;overflow:auto;font-size:.83rem;line-height:1.5}details{border:1px solid var(--line);border-radius:14px;margin-top:16px}summary{cursor:pointer;padding:14px 16px;font-weight:800}details>div{padding:0 16px 16px}.copy{float:right;border:1px solid var(--line);background:white;color:var(--primary);padding:6px 10px;border-radius:8px;cursor:pointer}footer{text-align:center;color:var(--muted);font-size:.82rem;padding:24px 0}
+@media(max-width:900px){.institutional-inner{grid-template-columns:auto 1fr}.institutional-meta{display:none}.route{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:650px){.institutional-inner{grid-template-columns:1fr;gap:6px}.institutional-logo{width:205px}.route{grid-template-columns:1fr}.hero{padding:25px 20px}.section{padding:20px 15px}.topinner nav{display:none}}
+@media print{.topbar,.copy{display:none!important}body{background:white}.section,.exercise,.hero{box-shadow:none}.hero{background:white;color:#000;border:1px solid #aaa}.hero p{color:#333}}
+</style>
+</head>
+<body>
+<header class="institutional-header"><div class="institutional-inner"><img class="institutional-logo" src="data:image/jpeg;base64,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" alt="UTN · Facultad Regional Mar del Plata"><div class="institutional-course"><span class="institutional-kicker">UTN · FR Mar del Plata · TUP</span><strong>Tecnicatura Universitaria en Programación</strong><span>Base de Datos I · Trabajo Práctico adicional</span></div><div class="institutional-meta"><strong>Universidad Tecnológica Nacional</strong><div>Facultad Regional Mar del Plata</div><div>2026</div></div></div></header>
+<div class="topbar"><div class="topinner"><strong>Base de Datos I · TP adicional</strong><nav><a href="#base">Base</a><a href="#cte">CTE</a><a href="#vistas">Vistas</a><a href="#combinados">Combinados</a><a href="#integracion">Integración</a></nav></div></div>
+<main class="wrap">
+<section class="hero"><div class="eyebrow">Práctica adicional · MySQL 8</div><h1>CTE, Vistas y Subconsultas</h1><p>Trabajo práctico complementario para consolidar los temas mediante una nueva base de datos y ejercicios diferentes a los ya trabajados. La propuesta avanza desde ejercicios específicos de CTE y Vistas hacia situaciones donde ambos recursos se combinan y, finalmente, se integran con subconsultas.</p><div class="hero-meta"><span>22 ejercicios</span><span>Base propia</span><span>Script completo incluido</span><span>Dificultad progresiva</span></div></section>
+<div class="route"><div><b>Bloque 1</b><span>CTE · ejercicios 1–4</span></div><div><b>Bloque 2</b><span>Vistas · ejercicios 5–8</span></div><div><b>Bloque 3</b><span>CTE + Vistas · ejercicios 9–12</span></div><div><b>Bloque 4</b><span>Subqueries + integración · 13–16</span></div><div><b>Bloque 5</b><span>EXISTS · ANY/SOME · ALL · 17–22</span></div></div>
+
+<section class="section"><span class="section-kicker">01 · Consigna general</span><h2>Forma de trabajo</h2><p class="lead">Resolver las consignas utilizando MySQL 8. Antes de comenzar, ejecutar el script completo de la base de datos.</p><ul><li>Escribir las consultas en el orden propuesto.</li><li>En los ejercicios de vistas, respetar los nombres indicados.</li><li>En los ejercicios combinados, utilizar el recurso solicitado en cada etapa.</li><li>Verificar los resultados antes de considerar finalizado cada ejercicio.</li></ul><div class="callout"><strong>Importante:</strong> este TP es adicional. Las situaciones fueron planteadas para no repetir las consignas principales de los trabajos anteriores.</div></section>
+
+<section class="section" id="base"><span class="section-kicker">02 · Base de datos</span><h2>Comercializadora tecnológica</h2><p>La base representa una empresa con sucursales, vendedores, clientes, categorías, productos y ventas.</p>
+<table><thead><tr><th>Tabla</th><th>Función</th></tr></thead><tbody>
+<tr><td><code>sucursales</code></td><td>Sucursales y ciudades.</td></tr><tr><td><code>vendedores</code></td><td>Vendedores asignados a sucursales.</td></tr><tr><td><code>clientes</code></td><td>Clientes particulares y empresas.</td></tr><tr><td><code>categorias</code></td><td>Categorías comerciales.</td></tr><tr><td><code>productos</code></td><td>Productos, precio actual y estado.</td></tr><tr><td><code>ventas</code></td><td>Cabecera de cada operación.</td></tr><tr><td><code>detalle_ventas</code></td><td>Productos, cantidades y precios vendidos.</td></tr>
+</tbody></table>
+<details open><summary>Script completo de creación e inserción</summary><div><button class="copy" onclick="copyScript(this)">Copiar script</button><pre id="scriptSql"><code>DROP DATABASE IF EXISTS tp_integrador_consultas;
+CREATE DATABASE tp_integrador_consultas
+CHARACTER SET utf8mb4
+COLLATE utf8mb4_unicode_ci;
+
+USE tp_integrador_consultas;
+
+CREATE TABLE sucursales (
+    id_sucursal INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(80) NOT NULL,
+    ciudad VARCHAR(80) NOT NULL
+);
+
+CREATE TABLE vendedores (
+    id_vendedor INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    id_sucursal INT NOT NULL,
+    fecha_ingreso DATE NOT NULL,
+    FOREIGN KEY (id_sucursal) REFERENCES sucursales(id_sucursal)
+);
+
+CREATE TABLE clientes (
+    id_cliente INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    ciudad VARCHAR(80) NOT NULL,
+    tipo VARCHAR(20) NOT NULL
+);
+
+CREATE TABLE categorias (
+    id_categoria INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(80) NOT NULL UNIQUE
+);
+
+CREATE TABLE productos (
+    id_producto INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    id_categoria INT NOT NULL,
+    precio DECIMAL(10,2) NOT NULL,
+    activo TINYINT(1) NOT NULL DEFAULT 1,
+    FOREIGN KEY (id_categoria) REFERENCES categorias(id_categoria)
+);
+
+CREATE TABLE ventas (
+    id_venta INT AUTO_INCREMENT PRIMARY KEY,
+    fecha DATE NOT NULL,
+    id_cliente INT NOT NULL,
+    id_vendedor INT NOT NULL,
+    FOREIGN KEY (id_cliente) REFERENCES clientes(id_cliente),
+    FOREIGN KEY (id_vendedor) REFERENCES vendedores(id_vendedor)
+);
+
+CREATE TABLE detalle_ventas (
+    id_detalle INT AUTO_INCREMENT PRIMARY KEY,
+    id_venta INT NOT NULL,
+    id_producto INT NOT NULL,
+    cantidad INT NOT NULL,
+    precio_unitario DECIMAL(10,2) NOT NULL,
+    FOREIGN KEY (id_venta) REFERENCES ventas(id_venta),
+    FOREIGN KEY (id_producto) REFERENCES productos(id_producto)
+);
+
+INSERT INTO sucursales (nombre, ciudad) VALUES
+(&#x27;Centro&#x27;, &#x27;Mar del Plata&#x27;),
+(&#x27;Puerto&#x27;, &#x27;Mar del Plata&#x27;),
+(&#x27;Balcarce&#x27;, &#x27;Balcarce&#x27;);
+
+INSERT INTO vendedores (nombre, id_sucursal, fecha_ingreso) VALUES
+(&#x27;Lucia Ferrer&#x27;, 1, &#x27;2021-03-15&#x27;),
+(&#x27;Martin Quiroga&#x27;, 1, &#x27;2023-08-01&#x27;),
+(&#x27;Paula Ibarra&#x27;, 2, &#x27;2020-11-10&#x27;),
+(&#x27;Diego Salas&#x27;, 2, &#x27;2024-02-20&#x27;),
+(&#x27;Camila Torres&#x27;, 3, &#x27;2022-06-05&#x27;);
+
+INSERT INTO clientes (nombre, ciudad, tipo) VALUES
+(&#x27;Alfa Servicios&#x27;, &#x27;Mar del Plata&#x27;, &#x27;EMPRESA&#x27;),
+(&#x27;Bruno Lopez&#x27;, &#x27;Mar del Plata&#x27;, &#x27;PARTICULAR&#x27;),
+(&#x27;Estudio Norte&#x27;, &#x27;Balcarce&#x27;, &#x27;EMPRESA&#x27;),
+(&#x27;Carolina Diaz&#x27;, &#x27;Miramar&#x27;, &#x27;PARTICULAR&#x27;),
+(&#x27;Delta Obras&#x27;, &#x27;Mar del Plata&#x27;, &#x27;EMPRESA&#x27;),
+(&#x27;Federico Luna&#x27;, &#x27;Necochea&#x27;, &#x27;PARTICULAR&#x27;),
+(&#x27;Gamma Tech&#x27;, &#x27;Balcarce&#x27;, &#x27;EMPRESA&#x27;),
+(&#x27;Helena Ruiz&#x27;, &#x27;Mar del Plata&#x27;, &#x27;PARTICULAR&#x27;);
+
+INSERT INTO categorias (nombre) VALUES
+(&#x27;Computacion&#x27;),
+(&#x27;Perifericos&#x27;),
+(&#x27;Oficina&#x27;),
+(&#x27;Redes&#x27;),
+(&#x27;Impresion&#x27;);
+
+INSERT INTO productos (nombre, id_categoria, precio, activo) VALUES
+(&#x27;Notebook Pro 14&#x27;, 1, 1250000.00, 1),
+(&#x27;Mini PC&#x27;, 1, 680000.00, 1),
+(&#x27;Mouse Inalambrico&#x27;, 2, 32000.00, 1),
+(&#x27;Teclado Mecanico&#x27;, 2, 95000.00, 1),
+(&#x27;Monitor 27&#x27;, 2, 310000.00, 1),
+(&#x27;Silla Ergonomica&#x27;, 3, 285000.00, 1),
+(&#x27;Escritorio Compacto&#x27;, 3, 210000.00, 1),
+(&#x27;Router AX&#x27;, 4, 145000.00, 1),
+(&#x27;Switch 8 Puertos&#x27;, 4, 98000.00, 1),
+(&#x27;Impresora Laser&#x27;, 5, 390000.00, 1),
+(&#x27;Scanner A4&#x27;, 5, 260000.00, 0),
+(&#x27;Webcam HD&#x27;, 2, 76000.00, 1);
+
+INSERT INTO ventas (fecha, id_cliente, id_vendedor) VALUES
+(&#x27;2026-03-04&#x27;, 1, 1),
+(&#x27;2026-03-07&#x27;, 2, 2),
+(&#x27;2026-03-18&#x27;, 3, 5),
+(&#x27;2026-04-02&#x27;, 1, 1),
+(&#x27;2026-04-10&#x27;, 4, 3),
+(&#x27;2026-04-21&#x27;, 5, 4),
+(&#x27;2026-05-03&#x27;, 6, 3),
+(&#x27;2026-05-14&#x27;, 7, 5),
+(&#x27;2026-05-28&#x27;, 2, 2),
+(&#x27;2026-06-06&#x27;, 5, 1),
+(&#x27;2026-06-19&#x27;, 8, 4),
+(&#x27;2026-07-01&#x27;, 3, 5),
+(&#x27;2026-07-12&#x27;, 1, 2),
+(&#x27;2026-08-08&#x27;, 7, 5),
+(&#x27;2026-08-23&#x27;, 4, 3),
+(&#x27;2026-09-05&#x27;, 5, 1),
+(&#x27;2026-09-18&#x27;, 2, 4),
+(&#x27;2026-10-02&#x27;, 1, 1);
+
+INSERT INTO detalle_ventas (id_venta, id_producto, cantidad, precio_unitario) VALUES
+(1, 1, 1, 1250000.00),
+(1, 3, 3, 32000.00),
+(2, 4, 1, 95000.00),
+(2, 12, 1, 76000.00),
+(3, 8, 2, 145000.00),
+(3, 9, 2, 98000.00),
+(4, 5, 2, 310000.00),
+(5, 6, 1, 285000.00),
+(5, 7, 1, 210000.00),
+(6, 10, 1, 390000.00),
+(6, 3, 4, 32000.00),
+(7, 12, 2, 76000.00),
+(8, 2, 1, 680000.00),
+(8, 8, 1, 145000.00),
+(9, 3, 2, 32000.00),
+(9, 4, 1, 95000.00),
+(10, 1, 1, 1190000.00),
+(10, 9, 3, 95000.00),
+(11, 5, 1, 305000.00),
+(12, 10, 2, 385000.00),
+(13, 6, 2, 280000.00),
+(13, 3, 2, 30000.00),
+(14, 2, 2, 670000.00),
+(15, 7, 1, 205000.00),
+(15, 12, 2, 74000.00),
+(16, 8, 3, 140000.00),
+(16, 9, 2, 94000.00),
+(17, 4, 2, 92000.00),
+(17, 12, 1, 75000.00),
+(18, 1, 1, 1210000.00),
+(18, 5, 1, 300000.00);
+</code></pre></div></details>
+<div class="callout warning"><strong>Atención:</strong> el script elimina y vuelve a crear la base <code>tp_integrador_consultas</code>. Utilizarlo en un entorno de práctica.</div></section>
+
+<section class="section" id="cte"><span class="section-kicker">03 · CTE</span><h2>Bloque A — Expresiones comunes de tabla</h2><p class="lead">Resolver mediante una o más CTE.</p><section class="exercise"><div class="exercise-head"><span class="tag">CTE</span><span class="num">Ejercicio 1</span></div><h3>Clientes atendidos por más de un vendedor</h3><p>Crear una CTE que obtenga, para cada cliente, la cantidad de vendedores distintos que lo atendieron durante 2026. En la consulta principal, mostrar únicamente los clientes que fueron atendidos por más de un vendedor, incluyendo nombre del cliente y cantidad de vendedores.</p></section>
+<section class="exercise"><div class="exercise-head"><span class="tag">CTE</span><span class="num">Ejercicio 2</span></div><h3>Importe vendido por sucursal</h3><p>Crear una CTE que calcule el importe total vendido por cada sucursal a partir de ventas y detalle_ventas. En la consulta principal, mostrar las sucursales ordenadas de mayor a menor importe y agregar el nombre de la ciudad.</p></section>
+<section class="exercise"><div class="exercise-head"><span class="tag">CTE</span><span class="num">Ejercicio 3</span></div><h3>Productos con movimiento en varios meses</h3><p>Crear una CTE que determine en cuántos meses diferentes fue vendido cada producto durante 2026. Mostrar únicamente los productos que tuvieron ventas en al menos dos meses distintos.</p></section>
+<section class="exercise"><div class="exercise-head"><span class="tag">CTE</span><span class="num">Ejercicio 4</span></div><h3>Dos etapas de resumen</h3><p>Resolver utilizando dos CTE. La primera debe calcular el importe total de cada venta. La segunda debe resumir esos importes por vendedor. En la consulta principal, mostrar nombre del vendedor, sucursal y total vendido, ordenando de mayor a menor.</p></section></section>
+<section class="section" id="vistas"><span class="section-kicker">04 · Vistas</span><h2>Bloque B — Vistas</h2><p class="lead">Crear y reutilizar vistas sobre la nueva base.</p><section class="exercise"><div class="exercise-head"><span class="tag">VISTA</span><span class="num">Ejercicio 5</span></div><h3>Catálogo comercial activo</h3><p>Crear una vista llamada v_catalogo_activo que reúna id_producto, producto, categoría, precio y estado activo, pero que exponga solamente los productos actualmente activos. Luego consultar la vista mostrando únicamente producto, categoría y precio, ordenados por categoría y nombre.</p></section>
+<section class="exercise"><div class="exercise-head"><span class="tag">VISTA</span><span class="num">Ejercicio 6</span></div><h3>Detalle comercial de ventas</h3><p>Crear una vista v_detalle_comercial que reúna en una sola estructura: id_venta, fecha, cliente, vendedor, sucursal, producto, categoría, cantidad, precio_unitario e importe de línea (cantidad × precio_unitario). Realizar luego una consulta sobre la vista para mostrar las operaciones de una sucursal elegida.</p></section>
+<section class="exercise"><div class="exercise-head"><span class="tag">VISTA</span><span class="num">Ejercicio 7</span></div><h3>Clientes empresa</h3><p>Crear una vista v_clientes_empresa que muestre únicamente id_cliente, nombre y ciudad de los clientes cuyo tipo sea EMPRESA. Luego utilizar la vista para listar cuántos clientes empresa hay por ciudad.</p></section>
+<section class="exercise"><div class="exercise-head"><span class="tag">VISTA</span><span class="num">Ejercicio 8</span></div><h3>Resumen de vendedores</h3><p>Crear una vista v_resumen_vendedores que muestre, por vendedor, cantidad de ventas realizadas e importe total vendido. Luego consultar esa vista para obtener los tres vendedores con mayor importe acumulado.</p></section></section>
+<section class="section" id="combinados"><span class="section-kicker">05 · Combinación</span><h2>Bloque C — CTE + Vistas</h2><p class="lead">Utilizar una vista como origen y una CTE para organizar un procesamiento temporal.</p><section class="exercise"><div class="exercise-head"><span class="tag">CTE + VISTA</span><span class="num">Ejercicio 9</span></div><h3>Resumen temporal sobre catálogo</h3><p>Utilizando v_catalogo_activo, crear una CTE que agrupe los productos activos por categoría e informe cantidad de productos y precio máximo. En la consulta principal, mostrar únicamente las categorías que tengan dos o más productos activos.</p></section>
+<section class="exercise"><div class="exercise-head"><span class="tag">CTE + VISTA</span><span class="num">Ejercicio 10</span></div><h3>Ventas por cliente a partir de una vista</h3><p>Utilizando v_detalle_comercial como origen, crear una CTE que calcule por cliente: cantidad de ventas distintas e importe total comprado. Mostrar los resultados ordenados por importe total de mayor a menor.</p></section>
+<section class="exercise"><div class="exercise-head"><span class="tag">CTE + VISTA</span><span class="num">Ejercicio 11</span></div><h3>Comparación entre sucursales</h3><p>A partir de v_detalle_comercial, crear una CTE que calcule el importe total vendido por sucursal. Utilizar luego esa CTE para mostrar cada sucursal junto con su total y ordenar el resultado de mayor a menor. No crear una nueva vista para este resumen.</p></section>
+<section class="exercise"><div class="exercise-head"><span class="tag">CTE + VISTA</span><span class="num">Ejercicio 12</span></div><h3>Productos destacados por categoría</h3><p>Usando v_detalle_comercial, crear una CTE que acumule la cantidad total vendida por producto. En la consulta principal, mostrar producto, categoría y cantidad total vendida para aquellos productos que hayan acumulado al menos 2 unidades.</p></section></section>
+<section class="section" id="integracion"><span class="section-kicker">06 · Integración</span><h2>Bloque D — Subconsultas con Vistas y CTE</h2><p class="lead">Combinar contenidos sin aumentar innecesariamente la complejidad.</p><section class="exercise"><div class="exercise-head"><span class="tag">SUBQUERY + VISTA</span><span class="num">Ejercicio 13</span></div><h3>Vendedores por encima del promedio</h3><p>Utilizando v_resumen_vendedores, obtener los vendedores cuyo importe total vendido sea superior al importe promedio calculado sobre la propia vista. La comparación final debe resolverse mediante una subconsulta escalar.</p></section>
+<section class="exercise"><div class="exercise-head"><span class="tag">SUBQUERY + VISTA</span><span class="num">Ejercicio 14</span></div><h3>Productos activos aún no vendidos</h3><p>Utilizando v_catalogo_activo, mostrar los productos activos que no aparezcan en ningún registro de detalle_ventas. Resolver la condición mediante NOT EXISTS.</p></section>
+<section class="exercise"><div class="exercise-head"><span class="tag">SUBQUERY + CTE</span><span class="num">Ejercicio 15</span></div><h3>Clientes con compras superiores al promedio</h3><p>Crear una CTE que calcule el total comprado por cada cliente. En la consulta principal, mostrar solamente los clientes cuyo total sea superior al promedio de los totales obtenidos en la propia CTE. La comparación debe resolverse mediante una subconsulta.</p></section>
+<section class="exercise"><div class="exercise-head"><span class="tag">INTEGRADOR</span><span class="num">Ejercicio 16</span></div><h3>Vista + CTE + subconsulta</h3><p>Utilizar v_detalle_comercial como origen. Crear una CTE que calcule el total vendido por categoría. Luego mostrar únicamente las categorías cuyo total vendido sea superior al promedio de los totales por categoría. La comparación final debe realizarse mediante una subconsulta sobre la CTE.</p></section></section>
+
+
+<section class="section" id="exists-any-all">
+<span class="section-kicker">07 · Operadores de subconsulta</span>
+<h2>Bloque E — EXISTS, ANY / SOME y ALL</h2>
+<p class="lead">Ejercicios adicionales para practicar operadores de subconsulta en combinación con tablas, vistas y CTE.</p>
+
+<section class="exercise">
+<div class="exercise-head"><span class="tag">EXISTS</span><span class="num">Ejercicio 17</span></div>
+<h3>Clientes con compras de productos de Redes</h3>
+<p>Mostrar los clientes que hayan realizado al menos una compra que incluya productos de la categoría <code>Redes</code>.</p>
+<p>La consulta debe resolverse utilizando <code>EXISTS</code>.</p>
+</section>
+
+<section class="exercise">
+<div class="exercise-head"><span class="tag">EXISTS + VISTA</span><span class="num">Ejercicio 18</span></div>
+<h3>Vendedores con ventas destacadas</h3>
+<p>Utilizando la vista <code>v_detalle_comercial</code>, mostrar los vendedores que hayan participado al menos una vez en una venta cuyo importe de línea sea superior a 300000.</p>
+<p>La condición debe resolverse utilizando <code>EXISTS</code>.</p>
+</section>
+
+<section class="exercise">
+<div class="exercise-head"><span class="tag">ALL</span><span class="num">Ejercicio 19</span></div>
+<h3>Productos por encima de toda una categoría</h3>
+<p>Mostrar los productos activos cuyo precio sea mayor que el precio de todos los productos pertenecientes a la categoría <code>Oficina</code>.</p>
+<p>La comparación debe resolverse utilizando <code>ALL</code>.</p>
+</section>
+
+<section class="exercise">
+<div class="exercise-head"><span class="tag">ANY / SOME</span><span class="num">Ejercicio 20</span></div>
+<h3>Productos por debajo de alguno de Computación</h3>
+<p>Mostrar los productos activos cuyo precio sea menor que el precio de al menos uno de los productos pertenecientes a la categoría <code>Computacion</code>.</p>
+<p>Resolver utilizando <code>ANY</code> o <code>SOME</code>.</p>
+</section>
+
+<section class="exercise">
+<div class="exercise-head"><span class="tag">CTE + ALL</span><span class="num">Ejercicio 21</span></div>
+<h3>Vendedores por encima de todos los de Puerto</h3>
+<p>Crear una CTE que obtenga el total vendido por cada vendedor.</p>
+<p>Luego mostrar los vendedores cuyo total vendido sea mayor que todos los totales correspondientes a los vendedores de la sucursal <code>Puerto</code>.</p>
+<p>La comparación final debe resolverse utilizando <code>ALL</code>.</p>
+</section>
+
+<section class="exercise">
+<div class="exercise-head"><span class="tag">VISTA + ANY</span><span class="num">Ejercicio 22</span></div>
+<h3>Comparación entre vendedores</h3>
+<p>Utilizando <code>v_resumen_vendedores</code>, mostrar los vendedores cuyo total vendido sea mayor que el total vendido de al menos uno de los vendedores con 3 o más ventas.</p>
+<p>La comparación debe resolverse utilizando <code>ANY</code> o <code>SOME</code>.</p>
+</section>
+</section>
+
+<section class="section"><span class="section-kicker">08 · Entrega</span><h2>Antes de finalizar</h2><ul><li>Guardar las consultas en un único archivo <code>.sql</code>.</li><li>Separar los bloques con comentarios.</li><li>Incluir las sentencias <code>CREATE VIEW</code> utilizadas.</li><li>Comprobar que la solución pueda ejecutarse sobre una base recién creada.</li><li>Poder explicar qué papel cumple la CTE, la vista o la subconsulta en los ejercicios integradores.</li></ul></section>
+<footer>Material didáctico · Base de Datos I · Prof. Lic. Adrian Aroca</footer>
+</main>
+<script>
+function copyScript(btn){const t=document.getElementById('scriptSql').innerText;navigator.clipboard.writeText(t).then(()=>{const o=btn.textContent;btn.textContent='Copiado';setTimeout(()=>btn.textContent=o,1200);});}
+</script>
+</body></html>
