@@ -397,6 +397,210 @@ WHERE id_producto = 11;
 -- ==================================================
 -- EJERCIO 15
 with cliente_compra_sup_promedio as(
-	
+	select
+		v.id_cliente,
+		sum(dv.cantidad) as total_comprado
+	from
+		ventas as v
+	join
+		detalle_ventas as dv
+		on dv.id_venta = v.id_venta
+	group by
+		v.id_cliente
 )
+
+select
+	c.id_cliente,
+    c.nombre,
+    ccsp.total_comprado
+from
+	clientes as c
+join
+	cliente_compra_sup_promedio as ccsp
+where
+	ccsp.total_comprado > (
+		select
+			avg(ccsp2.total_comprado)
+		from
+			cliente_compra_sup_promedio  as ccsp2
+    );
+-- ==================================================
+
+-- ==================================================
+-- EJERCIO 16
+with total_vendido as (
+	select
+		vdc.categoria,
+        sum(vdc.cantidad * vdc.precio_unitario) total_vendido
+	from
+		v_detalle_comercial  as vdc
+	group by
+		vdc.categoria
+)
+
+select
+	tv.categoria,
+    tv.total_vendido
+from
+	total_vendido as tv
+where
+	tv.total_vendido > (
+		select
+			avg(tv2.total_vendido)
+		from
+			total_vendido as tv2
+    );
+-- ==================================================
+
+-- ==================================================
+-- EJERCIO 17
+select
+	c.id_cliente,
+    c.nombre
+from
+	clientes as c
+where exists (
+	select
+		1
+	from
+		ventas as v
+	join
+		detalle_ventas as dv
+		on dv.id_venta = v.id_venta
+	join
+		productos as p
+		on p.id_producto = dv.id_producto
+	join
+		categorias as cat
+		on cat.id_categoria = p.id_categoria
+	where
+		v.id_cliente = c.id_cliente
+        and
+		cat.nombre = 'Redes'
+);
+-- ==================================================
+
+-- ==================================================
+-- EJERCIO 18
+select
+	vdc.vendedor
+from
+	v_detalle_comercial as vdc
+where exists (
+	select
+		1
+	from
+		v_detalle_comercial as vdc2
+	where
+		vdc2.vendedor = vdc.vendedor
+		and
+		vdc2.importe_total > 300000
+);
+-- ==================================================
+
+-- ==================================================
+-- EJERCIO 19
+select
+	p.nombre,
+    p.precio
+from
+	productos as p
+where
+	p.activo = 1
+    and
+	p.precio > all (
+		select
+			p2.precio
+		from
+			productos as p2
+		join
+			categorias as c
+			on c.id_categoria = p2.id_categoria
+		where
+            c.nombre = 'Oficina'
+    );
+-- ==================================================
+
+-- ==================================================
+-- EJERCIO 20
+select
+	p.nombre,
+    p.precio
+from
+	productos as p
+where
+	p.activo = 1
+    and
+	p.precio < any (
+		select
+			p2.precio
+		from
+			productos as p2
+		join
+			categorias as c
+			on c.id_categoria = p2.id_categoria
+		where
+            c.nombre = 'Computacion'
+    );
+-- ==================================================
+
+-- ==================================================
+-- EJERCIO 21
+with total_vendido_vendedor as (
+	select
+		v.id_vendedor,
+        v.nombre,
+        v.id_sucursal,
+        sum(dv.cantidad * dv.precio_unitario) as total_vendido
+	from
+		vendedores as v
+	join
+		ventas as ven
+        on v.id_vendedor = ven.id_vendedor
+	join
+		detalle_ventas as dv
+        on dv.id_venta = ven.id_venta
+	group by
+		v.id_vendedor,
+        v.nombre,
+        v.id_sucursal
+)
+
+select
+	tvv.id_vendedor,
+    tvv.nombre,
+    tvv.total_vendido
+from
+	total_vendido_vendedor as tvv
+where
+	tvv.total_vendido > all (
+		select
+			tvv2.total_vendido
+		from
+			total_vendido_vendedor as tvv2
+		join
+			sucursales as s
+            on tvv2.id_sucursal = s.id_sucursal
+		where
+			s.nombre = 'Puerto'
+    );
+-- ==================================================
+
+-- ==================================================
+-- EJERCIO 22
+select
+	vrv.nombre,
+    vrv.cantidad,
+	vrv.importe_total
+from
+	v_resumen_vendedores as vrv
+where
+	vrv.importe_total > any (
+		select
+			vrv2.importe_total
+		from
+			v_resumen_vendedores as vrv2
+		where
+			vrv2.cantidad >= 3
+    )
 -- ==================================================
